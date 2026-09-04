@@ -1,155 +1,116 @@
 const app = document.querySelector('#app');
-const nav = document.querySelector('.main-nav');
-const menuButton = document.querySelector('.mobile-menu');
-let merch = [];
+const nav = document.querySelector('.nav-menu');
+const globalSearch = document.querySelector('#global-search');
+const searchBox = document.querySelector('#global-search-box');
+const pageTitle = document.querySelector('#page-title');
+const pageDesc = document.querySelector('#page-desc');
+const toast = document.querySelector('#toast');
 
-const routes = {
-  home: { label: '首頁', eyebrow: '01 / ARCHIVE', title: '私人收藏，完整記錄。', desc: '把每一件買過、等待中與已經到手的收藏，整理成一座可以慢慢翻閱的數位展示櫃。' },
-  collection: { label: '收藏', eyebrow: '02 / COLLECTION', title: '收藏目錄', desc: '以作品、角色、類型與狀態整理所有收藏。搜尋、篩選，再進入每件物品的詳細資料。' },
-  stats: { label: '統計', eyebrow: '03 / STATISTICS', title: '收藏統計', desc: '數量、作品、角色與支出都集中在這裡，讓收藏不只是漂亮，也有自己的數字。' },
-  manage: { label: '管理', eyebrow: '04 / MANAGEMENT', title: '管理收藏', desc: '新增、修改與整理收藏資料。之後會在這裡接上 GitHub 儲存與圖片管理。' },
-  settings: { label: '設定', eyebrow: '05 / SETTINGS', title: '系統設定', desc: '登入、同步、顯示方式與資料來源設定。' }
+let db = { schemaVersion: 1, currency: 'TWD', items: [] };
+let viewState = { query: '', work: '', character: '', type: '', status: '', sort: 'created' };
+
+const ROUTES = {
+  home: { title: '我的收藏', desc: '收藏、購買與到貨狀態，集中整理在同一個地方。', eyebrow: '01 / HOME' },
+  collection: { title: '收藏', desc: '搜尋、篩選並瀏覽所有收藏資料。', eyebrow: '02 / COLLECTION' },
+  stats: { title: '統計', desc: '從作品、角色到支出，查看收藏的整體分布。', eyebrow: '03 / STATISTICS' },
+  manage: { title: '管理', desc: '新增與整理收藏資料，維持資料庫內容一致。', eyebrow: '04 / MANAGEMENT' },
+  settings: { title: '設定', desc: '資料來源、顯示方式與網站狀態。', eyebrow: '05 / SETTINGS' }
 };
 
-function routeName() {
-  const key = location.hash.replace(/^#\/?/, '').split('/')[0];
-  return routes[key] ? key : 'home';
-}
+const TYPES = ['Figure','PVC','Nendoroid','Plush','Acrylic','Badge','Card','Book','CD','Game','Other'];
+const STATUSES = ['待整理','待發售','預購','已出貨','運送中','已收到','其他'];
 
-function esc(value = '') {
-  return String(value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[ch]));
-}
+const esc = (v='') => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const items = () => db.items || [];
+const imageOf = item => item.images?.[0] || '';
+const isReceived = item => item.status === '已收到' || !!item.release?.receivedDate;
+const money = item => item.purchase?.price == null || item.purchase.price === '' ? '—' : `${item.purchase.currency || db.currency} ${Number(item.purchase.price).toLocaleString()}`;
+const dateValue = value => value ? new Date(value).getTime() || 0 : 0;
 
-function received(item) { return item?.shipping?.status === '已收到' || item?.release?.receivedDate; }
-function pending(item) { return !received(item); }
-function money(item) {
-  const price = item?.purchase?.price;
-  if (price === undefined || price === null || price === '') return '—';
-  return `${item?.purchase?.currency || 'TWD'} ${Number(price).toLocaleString()}`;
-}
-function imageOf(item) { return item?.images?.[0] || item?.image || ''; }
+function routeParts(){ return location.hash.replace(/^#\/?/, '').split('/').filter(Boolean); }
+function routeName(){ const r=routeParts()[0]; return ROUTES[r] ? r : 'home'; }
+function showToast(message, type='success'){ toast.textContent=message; toast.className=`toast show ${type}`; clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.className='toast',2200); }
+function setHeader(route){ pageTitle.textContent=ROUTES[route].title; pageDesc.textContent=ROUTES[route].desc; nav.querySelectorAll('.nav-item').forEach(a=>a.classList.toggle('active',a.dataset.route===route)); }
 
-function itemCard(item) {
-  const image = imageOf(item);
-  return `<a class="item-card" href="#/collection/${encodeURIComponent(item.id || '')}">
-    <div class="item-image">${image ? `<img src="${esc(image)}" alt="${esc(item.name)}" loading="lazy">` : '<div class="item-placeholder">NO IMAGE</div>'}</div>
-    <div class="item-title">${esc(item.name || '未命名收藏')}</div>
-    <div class="item-sub">${esc(item.character || item.work || '未分類')}</div>
-    <div class="item-meta"><span>${esc(item.type || 'MERCH')}</span><span>${esc(item.shipping?.status || '待整理')}</span></div>
+function card(item){
+  const image=imageOf(item);
+  const badgeClass=isReceived(item)?'received':item.status==='其他'?'other':'pending';
+  return `<a class="card" href="#/collection/${encodeURIComponent(item.id)}">
+    <div class="card-image">${image?`<img src="${esc(image)}" alt="${esc(item.name)}" loading="lazy">`:'<div class="card-placeholder">NO IMAGE</div>'}</div>
+    <strong class="card-title">${esc(item.name || '未命名收藏')}</strong>
+    <span class="card-sub">${esc(item.character || item.work || '未分類')}</span>
+    <div class="card-meta"><span class="badge">${esc(item.type || 'Other')}</span><span class="badge ${badgeClass}">${esc(item.status || '待整理')}</span></div>
   </a>`;
 }
 
-function stats() {
-  const works = new Set(merch.map(x => x.work).filter(Boolean)).size;
-  const chars = new Set(merch.map(x => x.character).filter(Boolean)).size;
-  return { total: merch.length, received: merch.filter(received).length, pending: merch.filter(pending).length, works, chars };
+function empty(icon,title,desc){return `<div class="empty-state"><i class="fa-solid ${icon}"></i><strong>${esc(title)}</strong><p>${esc(desc)}</p></div>`;}
+function pageHead(route, action=''){return `<div class="page-head"><div><span class="eyebrow">${ROUTES[route].eyebrow}</span><h1>${ROUTES[route].title}</h1></div><p>${ROUTES[route].desc}</p>${action}</div>`;}
+
+function stats(){
+  const list=items();
+  return { total:list.length, received:list.filter(isReceived).length, pending:list.filter(x=>!isReceived(x)).length, works:new Set(list.map(x=>x.work).filter(Boolean)).size, characters:new Set(list.map(x=>x.character).filter(Boolean)).size, spent:list.reduce((n,x)=>n+Number(x.purchase?.price||0),0) };
 }
 
-function home() {
-  const s = stats();
-  const recent = [...merch].sort((a,b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).slice(0, 8);
-  return `<section class="hero">
-    <div><div class="eyebrow">${routes.home.eyebrow}</div><h1>收藏不是清單。<br>它是一段時間。</h1></div>
-    <div class="hero-copy"><p>${routes.home.desc}</p><a class="text-link" href="#/collection">進入收藏目錄 <span>→</span></a></div>
-  </section>
-  <section class="stats-strip">
-    <div class="stat"><span class="stat-label">TOTAL ITEMS</span><span class="stat-value">${s.total}</span><span class="stat-label">全部收藏</span></div>
-    <div class="stat"><span class="stat-label">RECEIVED</span><span class="stat-value">${s.received}</span><span class="stat-label">已收到</span></div>
-    <div class="stat"><span class="stat-label">PENDING</span><span class="stat-value">${s.pending}</span><span class="stat-label">等待中</span></div>
-    <div class="stat"><span class="stat-label">WORKS</span><span class="stat-value">${s.works}</span><span class="stat-label">作品</span></div>
-  </section>
-  <section class="section">
-    <div class="section-head"><h2 class="section-title">最近加入</h2><a class="text-link" href="#/collection">查看全部 →</a></div>
-    ${recent.length ? `<div class="archive-grid">${recent.map(itemCard).join('')}</div>` : `<div class="empty"><h2>收藏館目前還是空的。</h2><p>第一件收藏加入後，它就會從這裡開始長出自己的目錄。</p></div>`}
-  </section>`;
+function home(){
+  const s=stats();
+  const recent=[...items()].sort((a,b)=>dateValue(b.createdAt)-dateValue(a.createdAt)).slice(0,8);
+  return `<div class="home-intro"><div><span class="eyebrow">${ROUTES.home.eyebrow}</span><h1>收藏，<br>好好記下來。</h1></div><div class="home-copy"><p>這裡不是單純的商品清單，而是你的收藏資料庫。每一件收藏都保留作品、角色、價格、發售與物流資訊。</p><a class="link" href="#/collection">瀏覽全部收藏 →</a></div></div>
+  <section class="section"><div class="stats">${stat('TOTAL ITEMS',s.total,'全部收藏')}${stat('RECEIVED',s.received,'已收到')}${stat('PENDING',s.pending,'等待中')}${stat('WORKS',s.works,'作品')}</div></section>
+  <section class="section"><div class="section-header"><h3><i class="fa-solid fa-clock-rotate-left"></i>最近加入</h3><a class="link" href="#/collection">查看全部 →</a></div>${recent.length?`<div class="grid">${recent.map(card).join('')}</div>`:empty('fa-box-open','收藏庫目前是空的','到管理頁新增第一件收藏。')}</section>`;
 }
+function stat(label,value,note){return `<div class="stat"><span class="stat-label">${label}</span><strong class="stat-value">${value.toLocaleString?.()??value}</strong><span class="stat-note">${note}</span></div>`;}
 
-function collection(id) {
-  if (id) {
-    const item = merch.find(x => String(x.id) === decodeURIComponent(id));
-    if (!item) return emptyPage('找不到這件收藏', '資料庫中沒有對應的項目。');
-    const image = imageOf(item);
-    const rows = [
-      ['作品', item.work], ['角色', item.character], ['類型', item.type], ['狀態', item.shipping?.status],
-      ['購買平台', item.purchase?.platform], ['購買日期', item.purchase?.date], ['價格', money(item)],
-      ['預計發售', item.release?.expectedDate], ['實際到貨', item.release?.receivedDate], ['備註', item.note]
-    ].filter(([,v]) => v !== undefined && v !== null && v !== '');
-    return `<section class="detail-layout">
-      <div class="detail-image">${image ? `<img src="${esc(image)}" alt="${esc(item.name)}">` : '<div class="item-placeholder">NO IMAGE</div>'}</div>
-      <div><div class="eyebrow">COLLECTION / ITEM</div><h1 class="detail-title">${esc(item.name)}</h1><div style="height:34px"></div>${rows.map(([k,v]) => `<div class="detail-row"><div class="detail-key">${esc(k)}</div><div>${esc(v)}</div></div>`).join('')}<div style="height:28px"></div><a class="text-link" href="#/collection">← 返回收藏</a></div>
-    </section>`;
-  }
-  return `<div class="page-head"><div><div class="eyebrow">${routes.collection.eyebrow}</div><h1>${routes.collection.title}</h1></div><p class="page-desc">${routes.collection.desc}</p></div>
-    <div class="toolbar">
-      <input class="field" id="search" placeholder="搜尋名稱、作品、角色、備註…">
-      <select class="select" id="work"><option value="">所有作品</option>${options('work')}</select>
-      <select class="select" id="character"><option value="">所有角色</option>${options('character')}</select>
-      <select class="select" id="type"><option value="">所有類型</option>${options('type')}</select>
-      <select class="select" id="status"><option value="">所有狀態</option>${options('shipping.status')}</select>
-    </div>
-    <div class="collection-tools"><span class="result-count" id="result-count"></span><select class="select" id="sort"><option value="created">最近加入</option><option value="name">名稱</option><option value="price">價格</option><option value="date">購買日期</option></select></div>
-    <div id="collection-results"></div>`;
+function collectionPage(){
+  const works=unique('work'), chars=unique('character');
+  return `${pageHead('collection')}<div class="toolbar"><input class="field search-field" id="collection-query" placeholder="搜尋名稱、作品、角色、備註…" value="${esc(viewState.query)}"><select class="select" id="filter-work"><option value="">所有作品</option>${works.map(x=>option(x,viewState.work)).join('')}</select><select class="select" id="filter-character"><option value="">所有角色</option>${chars.map(x=>option(x,viewState.character)).join('')}</select><select class="select" id="filter-type"><option value="">所有類型</option>${TYPES.map(x=>option(x,viewState.type)).join('')}</select><select class="select" id="filter-status"><option value="">所有狀態</option>${STATUSES.map(x=>option(x,viewState.status)).join('')}</select></div><div class="collection-bar"><span class="result-count" id="result-count"></span><select class="select sort" id="sort"><option value="created">最近加入</option><option value="name">名稱</option><option value="price">價格</option><option value="purchase">購買日期</option><option value="release">發售日期</option></select></div><div id="collection-results"></div>`;
 }
+function option(value,current){return `<option value="${esc(value)}" ${value===current?'selected':''}>${esc(value)}</option>`;}
+function unique(key){return [...new Set(items().map(x=>x[key]).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'zh-Hant'));}
+function filtered(){
+  const q=viewState.query.trim().toLocaleLowerCase();
+  let list=items().filter(x=>{const hay=[x.name,x.work,x.character,x.description,x.note,x.shipping?.note,x.afterSales?.note].filter(Boolean).join(' ').toLocaleLowerCase();return (!q||hay.includes(q))&&(!viewState.work||x.work===viewState.work)&&(!viewState.character||x.character===viewState.character)&&(!viewState.type||x.type===viewState.type)&&(!viewState.status||x.status===viewState.status);});
+  list.sort((a,b)=>{switch(viewState.sort){case'name':return String(a.name).localeCompare(String(b.name),'zh-Hant');case'price':return Number(b.purchase?.price||0)-Number(a.purchase?.price||0);case'purchase':return dateValue(b.purchase?.date)-dateValue(a.purchase?.date);case'release':return dateValue(b.release?.releaseDate)-dateValue(a.release?.releaseDate);default:return dateValue(b.createdAt)-dateValue(a.createdAt);}});return list;
+}
+function bindCollection(){
+  const map={query:'collection-query',work:'filter-work',character:'filter-character',type:'filter-type',status:'filter-status',sort:'sort'};
+  Object.entries(map).forEach(([key,id])=>document.getElementById(id)?.addEventListener(key==='query'?'input':'change',e=>{viewState[key]=e.target.value;renderCollectionResults();}));
+  document.getElementById('sort').value=viewState.sort; renderCollectionResults();
+}
+function renderCollectionResults(){const list=filtered();const count=document.getElementById('result-count');const out=document.getElementById('collection-results');if(!count||!out)return;count.textContent=`${list.length} ITEMS`;out.innerHTML=list.length?`<div class="grid">${list.map(card).join('')}</div>`:empty('fa-filter-circle-xmark','沒有符合條件的收藏','試著清除部分篩選條件。');}
 
-function options(path) {
-  const values = [...new Set(merch.map(x => path.split('.').reduce((a,k) => a?.[k], x)).filter(Boolean))].sort((a,b) => String(a).localeCompare(String(b), 'zh-Hant'));
-  return values.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+function detailPage(id){
+  const item=items().find(x=>String(x.id)===decodeURIComponent(id));
+  if(!item)return empty('fa-circle-question','找不到這件收藏','資料庫中沒有對應的項目。');
+  const image=imageOf(item);
+  return `<div class="section"><a class="link" href="#/collection">← 返回收藏</a></div><div class="detail-layout"><div class="detail-gallery"><div class="detail-main-image">${image?`<img src="${esc(image)}" alt="${esc(item.name)}">`:'<div class="card-placeholder">NO IMAGE</div>'}</div>${item.images?.length>1?`<div class="thumbs">${item.images.map(x=>`<img src="${esc(x)}" alt="" loading="lazy">`).join('')}</div>`:''}</div><div><span class="eyebrow">COLLECTION / ITEM</span><h1 class="detail-title">${esc(item.name)}</h1><p class="detail-summary">${esc(item.description)}</p>${detailSection('基本資料',[['作品',item.work],['角色',item.character],['類型',item.type],['狀態',item.status]])}${detailSection('購買資料',[['價格',money(item)],['平台',item.purchase?.platform],['購買日期',item.purchase?.date],['訂單',item.purchase?.order],['連結',item.purchase?.url]])}${detailSection('發售與物流',[['發售日期',item.release?.releaseDate],['預計日期',item.release?.expectedDate],['到貨日期',item.release?.receivedDate],['物流狀態',item.shipping?.status],['方式',item.shipping?.method],['單號',item.shipping?.trackingNumber],['物流備註',item.shipping?.note]])}${detailSection('售後與備註',[['售後狀態',item.afterSales?.status],['售後備註',item.afterSales?.note],['備註',item.note]])}</div></div>`;
 }
+function detailSection(title,rows){const valid=rows.filter(([,v])=>v!==undefined&&v!==null&&v!=='');if(!valid.length)return '';return `<section class="detail-section"><h3><i class="fa-solid fa-circle-info"></i>${title}</h3><div class="detail-table">${valid.map(([k,v])=>`<div class="detail-row"><span class="detail-key">${esc(k)}</span><span class="detail-value">${esc(v)}</span></div>`).join('')}</div></section>`;}
 
-function bindCollection() {
-  const els = ['search','work','character','type','status','sort'].map(id => document.getElementById(id)).filter(Boolean);
-  const render = () => {
-    const q = document.getElementById('search')?.value.trim().toLowerCase() || '';
-    const filters = { work: document.getElementById('work')?.value, character: document.getElementById('character')?.value, type: document.getElementById('type')?.value, status: document.getElementById('status')?.value };
-    let list = merch.filter(item => {
-      const haystack = [item.name,item.work,item.character,item.note,item.description].filter(Boolean).join(' ').toLowerCase();
-      return (!q || haystack.includes(q)) && (!filters.work || item.work === filters.work) && (!filters.character || item.character === filters.character) && (!filters.type || item.type === filters.type) && (!filters.status || item.shipping?.status === filters.status);
-    });
-    const sort = document.getElementById('sort')?.value;
-    list.sort((a,b) => sort === 'name' ? String(a.name).localeCompare(String(b.name),'zh-Hant') : sort === 'price' ? Number(b.purchase?.price || 0) - Number(a.purchase?.price || 0) : sort === 'date' ? String(b.purchase?.date || '').localeCompare(String(a.purchase?.date || '')) : String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
-    document.getElementById('result-count').textContent = `${list.length} ITEMS`;
-    document.getElementById('collection-results').innerHTML = list.length ? `<div class="archive-grid">${list.map(itemCard).join('')}</div>` : `<div class="empty"><h2>沒有符合條件的收藏</h2><p>試著放寬搜尋或清除其中一個篩選條件。</p></div>`;
-  };
-  els.forEach(el => el.addEventListener('input', render));
-  els.forEach(el => el.addEventListener('change', render));
-  render();
+function statsPage(){
+ const s=stats();
+ return `${pageHead('stats')}<section class="section"><div class="stats">${stat('TOTAL',s.total,'收藏總數')}${stat('RECEIVED',s.received,'已收到')}${stat('PENDING',s.pending,'尚未收到')}${stat('SPENDING',s.spent,db.currency+' 累計')}</div></section><section class="section"><div class="dashboard">${chartPanel('作品分布',countBy('work'))}${chartPanel('角色分布',countBy('character'))}${chartPanel('類型分布',countBy('type'))}</div></section>`;
 }
+function countBy(key){const m={};items().forEach(x=>{const v=x[key]||'未分類';m[v]=(m[v]||0)+1;});return m;}
+function chartPanel(title,data){const e=Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,10),max=e[0]?.[1]||1;return `<div class="content-frame"><div class="section-header"><h3>${esc(title)}</h3></div><div class="chart-list">${e.length?e.map(([n,v])=>`<div class="chart-row"><span>${esc(n)}</span><span class="chart-bar"><i style="width:${v/max*100}%"></i></span><strong>${v}</strong></div>`).join(''): '<span class="section-note">尚無資料</span>'}</div></div>`;}
 
-function statsPage() {
-  const s = stats();
-  const works = countBy('work');
-  const chars = countBy('character');
-  const totalSpent = merch.reduce((sum,x) => sum + Number(x.purchase?.price || 0), 0);
-  return `<div class="page-head"><div><div class="eyebrow">${routes.stats.eyebrow}</div><h1>${routes.stats.title}</h1></div><p class="page-desc">${routes.stats.desc}</p></div>
-  <section class="section"><div class="stats-strip"><div class="stat"><span class="stat-label">TOTAL</span><span class="stat-value">${s.total}</span></div><div class="stat"><span class="stat-label">RECEIVED</span><span class="stat-value">${s.received}</span></div><div class="stat"><span class="stat-label">PENDING</span><span class="stat-value">${s.pending}</span></div><div class="stat"><span class="stat-label">SPENDING</span><span class="stat-value">${totalSpent.toLocaleString()}</span></div></div></section>
-  <section class="section"><div class="dashboard-grid"><div class="panel"><h3>作品分布</h3>${bars(works)}</div><div class="panel"><h3>角色分布</h3>${bars(chars)}</div><div class="panel"><h3>類型</h3>${bars(countBy('type'))}</div></div></section>`;
+function managePage(){
+ return `${pageHead('manage')}<section class="section"><div class="content-frame"><div class="section-header"><h3><i class="fa-solid fa-plus"></i>新增收藏</h3></div><form id="item-form" class="form-grid"><div class="form-field"><label>名稱 *</label><input class="field" name="name" required></div><div class="form-field"><label>作品</label><input class="field" name="work"></div><div class="form-field"><label>角色</label><input class="field" name="character"></div><div class="form-field"><label>類型</label><select class="select" name="type"><option value="">請選擇</option>${TYPES.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="form-field"><label>狀態</label><select class="select" name="status">${STATUSES.map(x=>`<option ${x==='待整理'?'selected':''}>${x}</option>`).join('')}</select></div><div class="form-field"><label>價格</label><input class="field" name="price" type="number" min="0" step="0.01"></div><div class="form-field"><label>購買平台</label><input class="field" name="platform"></div><div class="form-field"><label>購買日期</label><input class="field" name="purchaseDate" type="date"></div><div class="form-field"><label>預計發售</label><input class="field" name="expectedDate" type="date"></div><div class="form-field"><label>圖片 URL</label><input class="field" name="image" type="url"></div><div class="form-field full"><label>描述</label><textarea class="field" name="description"></textarea></div><div class="form-field full"><label>備註</label><textarea class="field" name="note"></textarea></div><div class="form-field full"><div class="actions"><button class="button primary" type="submit"><i class="fa-solid fa-plus"></i>加入收藏</button><button class="button" type="reset">清除</button></div></div></form></div></section><section class="section"><div class="section-header"><h3><i class="fa-solid fa-list-check"></i>資料庫項目</h3><small>${items().length} 件</small></div>${items().length?`<div class="grid">${items().map(manageCard).join('')}</div>`:empty('fa-box-open','目前沒有收藏','新增第一件收藏後會出現在這裡。')}</section>`;
 }
-function countBy(path) { const map = {}; merch.forEach(x => { const v = path.split('.').reduce((a,k)=>a?.[k],x) || '未分類'; map[v]=(map[v]||0)+1; }); return map; }
-function bars(map) { const entries = Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,8); const max = entries[0]?.[1] || 1; return entries.length ? entries.map(([name,n])=>`<div class="bar-row"><span>${esc(name)}</span><span class="bar"><i style="width:${n/max*100}%"></i></span><span>${n}</span></div>`).join('') : '<p class="section-note">尚無資料</p>'; }
+function manageCard(item){return `<div class="card"><div class="card-image">${imageOf(item)?`<img src="${esc(imageOf(item))}" alt="" loading="lazy">`:'<div class="card-placeholder">NO IMAGE</div>'}</div><strong class="card-title">${esc(item.name)}</strong><span class="card-sub">${esc(item.work||'未分類')} · ${esc(item.status)}</span><div class="actions"><a class="button" href="#/collection/${encodeURIComponent(item.id)}">查看</a><button class="button" data-delete="${esc(item.id)}" type="button">刪除</button></div></div>`;}
+function bindManage(){document.getElementById('item-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget);const now=new Date().toISOString();const item=window.MerchData.normalizeItem({id:crypto.randomUUID(),name:f.get('name'),work:f.get('work'),character:f.get('character'),type:f.get('type'),status:f.get('status'),description:f.get('description'),note:f.get('note'),images:f.get('image')?[f.get('image')]:[],purchase:{price:f.get('price')||null,currency:db.currency,platform:f.get('platform'),date:f.get('purchaseDate')},release:{expectedDate:f.get('expectedDate')},createdAt:now,updatedAt:now});db.items.unshift(item);saveDraft();e.currentTarget.reset();showToast('已加入本機草稿');render();});document.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.delete;if(confirm('確定要刪除這件收藏嗎？')){db.items=db.items.filter(x=>String(x.id)!==id);saveDraft();showToast('已刪除本機草稿');render();}}));}
+function saveDraft(){localStorage.setItem('chi-merch-draft',JSON.stringify(db));}
 
-function managePage() {
-  return `<div class="page-head"><div><div class="eyebrow">${routes.manage.eyebrow}</div><h1>${routes.manage.title}</h1></div><p class="page-desc">${routes.manage.desc}</p></div>
-  <section class="section"><div class="notice">管理功能的資料寫入層尚未接上 GitHub API。介面先完整保留，後續接上登入與 commit 後即可直接使用。</div><div style="height:30px"></div><form class="form-grid" onsubmit="return false"><div class="form-field"><label>NAME</label><input class="field" placeholder="收藏名稱"></div><div class="form-field"><label>WORK</label><input class="field" placeholder="作品名稱"></div><div class="form-field"><label>CHARACTER</label><input class="field" placeholder="角色名稱"></div><div class="form-field"><label>TYPE</label><input class="field" placeholder="Figure / Acrylic / Card…"></div><div class="form-field full"><label>NOTE</label><textarea class="field" rows="5" placeholder="備註"></textarea></div><div class="form-field full"><button class="action" type="button">預覽新增資料</button></div></form></section>`;
-}
-function settingsPage() {
-  return `<div class="page-head"><div><div class="eyebrow">${routes.settings.eyebrow}</div><h1>${routes.settings.title}</h1></div><p class="page-desc">${routes.settings.desc}</p></div>
-  <section class="section"><div class="detail-row"><div class="detail-key">GITHUB</div><div>尚未登入</div></div><div class="detail-row"><div class="detail-key">REPOSITORY</div><div>tsai97216/merch</div></div><div class="detail-row"><div class="detail-key">BRANCH</div><div>main</div></div><div class="detail-row"><div class="detail-key">DATA</div><div>data/merch.json</div></div></section>`;
-}
-function emptyPage(title, desc) { return `<div class="empty" style="margin-top:70px"><h2>${esc(title)}</h2><p>${esc(desc)}</p></div>`; }
+function settingsPage(){return `${pageHead('settings')}<section class="section"><div class="content-frame">${row('資料庫狀態',`${items().length} 件收藏`)}${row('Schema',`v${db.schemaVersion}`)}${row('資料來源','data/merch.json')}${row('GitHub','tsai97216/merch · main')}${row('本機草稿',localStorage.getItem('chi-merch-draft')?'存在':'無')}</div></section><section class="section"><div class="content-frame"><div class="section-header"><h3><i class="fa-solid fa-palette"></i>外觀</h3></div><label class="form-field"><span>主題</span><select class="select" id="theme"><option value="light">淺色</option><option value="dark">深色</option><option value="system">跟隨系統</option></select></label></div></section>`;}
+function row(k,v){return `<div class="detail-row"><span class="detail-key">${esc(k)}</span><span class="detail-value">${esc(v)}</span></div>`;}
+function bindSettings(){const select=document.getElementById('theme');if(!select)return;const saved=localStorage.getItem('chi-merch-theme')||'light';select.value=saved;applyTheme(saved);select.addEventListener('change',()=>{localStorage.setItem('chi-merch-theme',select.value);applyTheme(select.value);});}
+function applyTheme(v){document.documentElement.dataset.theme=v==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):v;}
 
-async function render() {
-  const route = routeName();
-  const parts = location.hash.replace(/^#\/?/, '').split('/');
-  nav.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.dataset.route === route));
-  if (route === 'home') app.innerHTML = home();
-  if (route === 'collection') app.innerHTML = collection(parts[1]);
-  if (route === 'stats') app.innerHTML = statsPage();
-  if (route === 'manage') app.innerHTML = managePage();
-  if (route === 'settings') app.innerHTML = settingsPage();
-  if (route === 'collection' && !parts[1]) bindCollection();
-  nav.classList.remove('open');
-}
+function globalSearchPage(){const q=globalSearch.value.trim();viewState.query=q;location.hash='#/collection';}
+function render(){const parts=routeParts(),route=routeName(),id=parts[1];setHeader(route);if(route==='home')app.innerHTML=home();else if(route==='collection')app.innerHTML=id?detailPage(id):collectionPage();else if(route==='stats')app.innerHTML=statsPage();else if(route==='manage')app.innerHTML=managePage();else app.innerHTML=settingsPage();app.setAttribute('aria-busy','false');if(route==='collection'&&!id)bindCollection();if(route==='manage')bindManage();if(route==='settings')bindSettings();}
 
-menuButton?.addEventListener('click', () => nav.classList.toggle('open'));
-window.addEventListener('hashchange', render);
-(async () => { merch = await window.MerchData.loadMerch(); await render(); })();
+async function init(){try{const draft=localStorage.getItem('chi-merch-draft');db=draft?window.MerchData.normalizeDatabase(JSON.parse(draft)):await window.MerchData.loadDatabase();}catch(e){console.error(e);db=window.MerchData.emptyDatabase();app.innerHTML=empty('fa-triangle-exclamation','資料載入失敗','請稍後重新整理頁面。');return;}render();}
+
+globalSearch.addEventListener('input',()=>searchBox.classList.toggle('has-value',!!globalSearch.value));
+globalSearch.addEventListener('keydown',e=>{if(e.key==='Enter')globalSearchPage();});document.getElementById('search-clear').addEventListener('click',()=>{globalSearch.value='';searchBox.classList.remove('has-value');});
+window.addEventListener('hashchange',render);window.addEventListener('online',()=>location.reload());
+init();
