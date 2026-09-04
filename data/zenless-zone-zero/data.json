@@ -2,6 +2,46 @@
   "schemaVersion": 1,
   "work": "zenless-zone-zero",
   "name": "絕區零",
-  "updatedAt": "2026-09-04T05:24:01.556Z",
-  "items": []
+  "updatedAt": "2026-09-04T05:26:45.920Z",
+  "items": [
+    {
+      "id": "item-1788499604827-8xrmwb",
+      "images": [],
+      "workId": "zenless-zone-zero",
+      "title": "蕾米埃爾 影畫系列 吧唧",
+      "series": "",
+      "characters": [],
+      "category": "吧唧",
+      "manufacturer": "米哈遊",
+      "status": "preorder",
+      "description": "",
+      "notes": "",
+      "purchase": {
+        "price": 77,
+        "currency": "TWD",
+        "platform": "",
+        "date": "2026-09-03",
+        "url": "",
+        "orderId": ""
+      },
+      "release": {
+        "date": "",
+        "expectedDate": "2026-11-30",
+        "receivedDate": ""
+      },
+      "shipping": {
+        "status": "pending",
+        "method": "集運",
+        "trackingNumber": "",
+        "note": ""
+      },
+      "afterSales": {
+        "status": "none",
+        "note": "",
+        "updatedAt": "2026-09-04T05:26:44.826Z"
+      },
+      "createdAt": "2026-09-04T05:26:44.826Z",
+      "updatedAt": "2026-09-04T05:26:44.826Z"
+    }
+  ]
 }
