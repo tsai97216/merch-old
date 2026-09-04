@@ -1,0 +1,57 @@
+/* Page switching for the static template. No JavaScript required. */
+.page {
+  display: none;
+}
+
+/* Home is the default view when there is no hash. */
+body:not(:has(.page:target)) #home {
+  display: block;
+}
+
+/* Only the section addressed by the sidebar is visible. */
+.page:target {
+  display: block;
+}
+
+/* Keep the shared footer in the viewport flow instead of after every page. */
+.main {
+  min-height: 100vh;
+}
+
+/* Active navigation state follows the selected page. */
+.nav-item.active {
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+  box-shadow: none;
+}
+.nav-item.active i {
+  color: inherit;
+}
+
+body:not(:has(.page:target)) .nav-home,
+body:has(#home:target) .nav-home,
+body:has(#collection:target) .nav-collection,
+body:has(#statistics:target) .nav-statistics,
+body:has(#management:target) .nav-management,
+body:has(#settings:target) .nav-settings {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+body:not(:has(.page:target)) .nav-home i,
+body:has(#home:target) .nav-home i,
+body:has(#collection:target) .nav-collection i,
+body:has(#statistics:target) .nav-statistics i,
+body:has(#management:target) .nav-management i,
+body:has(#settings:target) .nav-settings i {
+  color: var(--accent);
+}
+
+/* A selected page starts at the content top rather than leaving a stale scroll position. */
+.page:target,
+body:not(:has(.page:target)) #home {
+  scroll-margin-top: 0;
+}
