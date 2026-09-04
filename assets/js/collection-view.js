@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const VERSION = 'v1.11.0';
+  const VERSION = 'v1.12.0';
 
   document.querySelectorAll('.sidebar-footer span:last-child, #settings dd, .footer span:last-child').forEach((element) => {
     if (/^v\d+\.\d+\.\d+$/.test(element.textContent.trim())) element.textContent = VERSION;
@@ -48,13 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
   tabs.innerHTML = ['全部', ...works.map((work) => work.name)].map((name, i) => `<button type="button" role="tab" aria-selected="${i === 0}" class="stats-work-tab${i === 0 ? ' is-active' : ''}" data-work-index="${i - 1}">${name}</button>`).join('');
   overview.before(tabs);
 
-  const baseHTML = overview.outerHTML + chartArea.outerHTML;
   const renderWork = (work) => {
-    if (!work) {
-      overview.style.display = '';
-      chartArea.style.display = '';
-      return;
-    }
+    if (!work) return;
     overview.style.display = 'grid';
     overview.innerHTML = `
       <article class="stat-card"><span>COLLECTION</span><strong>${work.count}</strong><small>收藏件數</small></article>
@@ -83,11 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
       item.setAttribute('aria-selected', active ? 'true' : 'false');
     });
     const index = Number(tab.dataset.workIndex);
-    if (index < 0) {
-      overview.outerHTML = baseHTML.split('<!--SPLIT-->')[0];
-      renderWork(null);
-      location.reload();
-    } else renderWork(works[index]);
+    if (index >= 0) renderWork(works[index]);
+    else location.reload();
   }));
 
   const categoryPie = statistics.querySelector('.category-pie');
