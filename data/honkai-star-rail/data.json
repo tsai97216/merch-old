@@ -2,6 +2,48 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T05:30:12.038Z",
-  "items": []
+  "updatedAt": "2026-09-04T05:31:27.066Z",
+  "items": [
+    {
+      "id": "item-1788499886180-xm1w0h",
+      "images": [],
+      "workId": "honkai-star-rail",
+      "title": "流螢 春日手信 1/8比例手辦",
+      "series": "",
+      "characters": [
+        "流螢"
+      ],
+      "category": "手辦",
+      "manufacturer": "Myethos",
+      "status": "received",
+      "description": "",
+      "notes": "",
+      "purchase": {
+        "price": 1375,
+        "currency": "TWD",
+        "platform": "米哈遊淘寶",
+        "date": "2026-08-05",
+        "url": "",
+        "orderId": ""
+      },
+      "release": {
+        "date": "",
+        "expectedDate": "",
+        "receivedDate": "2026-09-14"
+      },
+      "shipping": {
+        "status": "received",
+        "method": "集運",
+        "trackingNumber": "",
+        "note": ""
+      },
+      "afterSales": {
+        "status": "pending",
+        "note": "待換貨",
+        "updatedAt": "2026-09-04T05:31:26.180Z"
+      },
+      "createdAt": "2026-09-04T05:31:26.180Z",
+      "updatedAt": "2026-09-04T05:31:26.180Z"
+    }
+  ]
 }
