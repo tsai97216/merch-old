@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T09:22:15.444Z",
+  "updatedAt": "2026-09-04T10:23:10.218Z",
   "items": [
     {
       "id": "item-1788499886180-xm1w0h",
@@ -94,6 +94,45 @@
       },
       "createdAt": "2026-09-04T05:38:47.137Z",
       "updatedAt": "2026-09-04T05:38:47.137Z"
+    },
+    {
+      "id": "item-1788517388831-vd42lt",
+      "images": [],
+      "workId": "honkai-star-rail",
+      "title": "【米哈游/崩坏：星穹铁道/定金】昔涟1/8手办美好假日Ver. m",
+      "series": "",
+      "characters": [],
+      "category": "",
+      "manufacturer": "",
+      "status": "pending",
+      "description": "",
+      "notes": "",
+      "purchase": {
+        "price": 0,
+        "currency": "TWD",
+        "platform": "",
+        "date": "",
+        "url": "",
+        "orderId": ""
+      },
+      "release": {
+        "date": "",
+        "expectedDate": "",
+        "receivedDate": ""
+      },
+      "shipping": {
+        "status": "pending",
+        "method": "",
+        "trackingNumber": "",
+        "note": ""
+      },
+      "afterSales": {
+        "status": "none",
+        "note": "",
+        "updatedAt": "2026-09-04T10:23:08.831Z"
+      },
+      "createdAt": "2026-09-04T10:23:08.831Z",
+      "updatedAt": "2026-09-04T10:23:08.831Z"
     }
   ]
 }
