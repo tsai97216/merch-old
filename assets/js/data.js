@@ -1,4 +1,4 @@
-import { github } from './github.js?v=2.16.5';
+import { github } from './github.js?v=2.17.5';
 
 const WORK_INDEX_PATH = 'data/works.json';
 
@@ -6,24 +6,15 @@ let cache = null;
 const listeners = new Set();
 let reloadPromise = null;
 
-async function fetchJson(path) {
-  const response = await fetch(path, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`無法載入資料：${path} (${response.status})`);
-  return response.json();
-}
-
 async function loadWorkData(work) {
-  if (github.connected) {
-    const remote = await github.readWorkFile(work.id);
-    return remote.data;
-  }
-  return fetchJson(work.data);
+  const remote = await github.readWorkFile(work.id);
+  return remote.data;
 }
 
 async function fetchSnapshot() {
-  const index = await fetchJson(WORK_INDEX_PATH);
+  const index = await github.readFile(WORK_INDEX_PATH);
   const works = await Promise.all(
-    index.works.map(async (work) => {
+    index.data.works.map(async (work) => {
       const data = await loadWorkData(work);
       return {
         ...work,
@@ -36,7 +27,7 @@ async function fetchSnapshot() {
       };
     })
   );
-  return { schemaVersion: index.schemaVersion || 1, works, items: works.flatMap((work) => work.items) };
+  return { schemaVersion: index.data?.schemaVersion || 1, works, items: works.flatMap((work) => work.items) };
 }
 
 function applySnapshot(snapshot) {
