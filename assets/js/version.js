@@ -1,4 +1,4 @@
-let currentVersion = 'v2.9.3';
+let currentVersion = 'v2.10.3';
 
 export function getVersion() {
   return currentVersion;
