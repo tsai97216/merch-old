@@ -1,4 +1,0 @@
-import {normalizeDatabase} from './data.js';
-let state={database:normalizeDatabase(null),route:{name:'home',id:null},collection:{query:'',series:'',character:'',category:'',status:'',platform:'',year:'',sort:'createdAt'},settings:{theme:'system',view:'grid'},sync:{status:'idle',lastSyncAt:'',message:''}};
-const listeners=new Set();
-export const store={getState:()=>state,subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn)},set(patch){state={...state,...patch};listeners.forEach(fn=>fn(state));},setDatabase(database){this.set({database:normalizeDatabase(database)})},setCollection(patch){this.set({collection:{...state.collection,...patch}})},setRoute(route){this.set({route})},setSettings(settings){this.set({settings:{...state.settings,...settings}})},setSync(sync){this.set({sync:{...state.sync,...sync}})}};
