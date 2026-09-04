@@ -1,4 +1,4 @@
-import { getVersion, setVersion } from './version.js?v=2.8.3';
+import { getVersion, setVersion } from './version.js?v=2.10.3';
 
 const API_BASE = 'https://chi-merch-api.tsai97216.workers.dev';
 const REPO_OWNER = 'tsai97216';
@@ -8,16 +8,19 @@ const WORK_INDEX_PATH = 'data/works.json';
 const VERSION_PATH = 'data/version.json';
 
 let connected = false;
-let identity = sessionStorage.getItem('chi-merch-access-email') || '';
+let adminSecret = '';
 
 function apiHeaders(jsonBody = false) {
-  return jsonBody ? { 'Content-Type': 'application/json' } : {};
+  return {
+    ...(jsonBody ? { 'Content-Type': 'application/json' } : {}),
+    ...(adminSecret ? { Authorization: `Bearer ${adminSecret}` } : {})
+  };
 }
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
-    credentials: 'include',
+    credentials: 'omit',
     headers: { ...apiHeaders(Boolean(options.body)), ...(options.headers || {}) }
   });
   const body = await response.json().catch(() => ({}));
@@ -95,21 +98,31 @@ async function bumpCollectionVersion(delta) {
 
 export const github = {
   get connected() { return connected; },
-  get user() { return identity; },
-  async test() {
-    const result = await request('/auth/status');
-    if (!result.authenticated) throw new Error('尚未完成 Cloudflare Access 認證。');
-    connected = true;
-    identity = result.email || '';
-    if (identity) sessionStorage.setItem('chi-merch-access-email', identity);
-    window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: true, email: identity } }));
-    return { user: identity, repository: `${REPO_OWNER}/${REPO_NAME}` };
+  get user() { return connected ? 'Admin' : ''; },
+  async test(secret = '') {
+    const token = secret.trim();
+    if (!token) throw new Error('Admin Secret 不可為空。');
+    adminSecret = token;
+    try {
+      const result = await request('/auth/status');
+      if (!result.authenticated) throw new Error('Admin Secret 驗證失敗。');
+      connected = true;
+      window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: true, email: 'Admin' } }));
+      return { user: 'Admin', repository: `${REPO_OWNER}/${REPO_NAME}` };
+    } catch (error) {
+      adminSecret = '';
+      connected = false;
+      throw error;
+    }
   },
-  connect() { return this.test(); },
+  connect() {
+    const secret = window.prompt('請輸入 Admin Secret');
+    if (secret === null) throw new Error('已取消。');
+    return this.test(secret);
+  },
   disconnect() {
     connected = false;
-    identity = '';
-    sessionStorage.removeItem('chi-merch-access-email');
+    adminSecret = '';
     window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: false } }));
   },
   async readAllWorks() {
