@@ -1,6 +1,6 @@
-import { github } from './github.js';
-import { getVersion } from './version.js';
-import { API_BASE } from './github.js';
+import { github } from './github.js?v=2.8.3';
+import { getVersion } from './version.js?v=2.8.3';
+import { API_BASE } from './github.js?v=2.8.3';
 
 export function createSettings({ settings }) {
   if (!settings) return;
