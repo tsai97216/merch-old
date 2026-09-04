@@ -100,17 +100,21 @@ export default {
       });
     }
 
-    if (!env.ADMIN_SECRET) return json({ error: 'Worker 尚未設定 ADMIN_SECRET。' }, 503);
-    if (!isAuthorized(request, env)) return json({ error: 'Admin Secret 無效或未提供。' }, 401);
-
     const url = new URL(request.url);
     if (url.pathname === '/auth/status' && request.method === 'GET') {
+      if (!env.ADMIN_SECRET) return json({ error: 'Worker 尚未設定 ADMIN_SECRET。' }, 503);
+      if (!isAuthorized(request, env)) return json({ authenticated: false }, 401);
       return json({ authenticated: true });
     }
 
     const path = normalizePath(url.pathname);
     if (!path) return json({ error: '不允許的 API 路徑。' }, 404);
     if (!['GET', 'PUT', 'DELETE'].includes(request.method)) return json({ error: '不支援的 HTTP 方法。' }, 405);
+
+    if (request.method === 'GET') return githubRequest(request, env, path);
+
+    if (!env.ADMIN_SECRET) return json({ error: 'Worker 尚未設定 ADMIN_SECRET。' }, 503);
+    if (!isAuthorized(request, env)) return json({ error: 'Admin Secret 無效或未提供。' }, 401);
 
     return githubRequest(request, env, path);
   }
