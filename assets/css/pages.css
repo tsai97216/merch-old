@@ -1,30 +1,27 @@
-/* Page switching for the static template. No JavaScript required. */
+/* Page switching for the static template. No JavaScript required for page navigation. */
 .page {
   display: none;
 }
 
-/* Home is the default view when there is no hash. */
 body:not(:has(.page:target)) #home {
   display: block;
 }
 
-/* Only the section addressed by the sidebar is visible. */
 .page:target {
   display: block;
 }
 
-/* Keep the shared footer in the viewport flow instead of after every page. */
 .main {
   min-height: 100vh;
 }
 
-/* Active navigation state follows the selected page. */
 .nav-item.active {
   background: transparent;
   color: var(--muted);
   font-weight: 500;
   box-shadow: none;
 }
+
 .nav-item.active i {
   color: inherit;
 }
@@ -50,8 +47,176 @@ body:has(#settings:target) .nav-settings i {
   color: var(--accent);
 }
 
-/* A selected page starts at the content top rather than leaving a stale scroll position. */
 .page:target,
 body:not(:has(.page:target)) #home {
   scroll-margin-top: 0;
+}
+
+/* Collection view switch */
+.collection-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-switch {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.view-button {
+  min-height: 34px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.view-button i {
+  font-size: 11px;
+}
+
+.view-button:hover {
+  background: var(--surface-tint);
+  color: var(--text);
+}
+
+.view-button.is-active {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.collection-view[hidden] {
+  display: none;
+}
+
+.collection-list {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.collection-list-row {
+  min-height: 76px;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 52px minmax(220px, 1fr) 72px 80px 110px;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.collection-list-row:last-child {
+  border-bottom: 0;
+}
+
+.collection-list-row:hover {
+  background: var(--surface-soft);
+}
+
+.list-image {
+  width: 52px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--surface-tint);
+  color: var(--muted);
+  font: 8px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.list-main {
+  min-width: 0;
+}
+
+.list-main h4 {
+  font-size: 13px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.list-main p {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.collection-list-row .tag {
+  justify-self: start;
+}
+
+.list-type {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.collection-list-row > strong {
+  justify-self: end;
+  font: 650 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (max-width: 760px) {
+  .collection-meta {
+    align-items: flex-start;
+  }
+
+  .collection-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .collection-actions .sort {
+    width: 100%;
+  }
+
+  .view-switch {
+    justify-content: stretch;
+  }
+
+  .view-button {
+    flex: 1;
+  }
+
+  .collection-list-row {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .list-image {
+    width: 48px;
+  }
+
+  .collection-list-row .tag {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .list-type {
+    display: none;
+  }
+
+  .collection-list-row > strong {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    justify-self: start;
+  }
 }
