@@ -1,5 +1,8 @@
 {
   "schemaVersion": 1,
-  "currency": "TWD",
+  "meta": {
+    "updatedAt": "",
+    "currency": "TWD"
+  },
   "items": []
 }
