@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T05:25:05.243Z",
+  "updatedAt": "2026-09-04T05:25:18.461Z",
   "items": [
     {
       "id": "hsr-firefly-17-scale",
@@ -19,29 +19,29 @@
         "price": 1375,
         "currency": "TWD",
         "platform": "官方商城",
-        "date": "2026-06-12",
+        "date": "2026-08-05",
         "url": "",
         "orderId": ""
       },
       "release": {
         "date": "",
         "expectedDate": "",
-        "receivedDate": "2026-08-24"
+        "receivedDate": "2026-08-14"
       },
       "shipping": {
         "status": "received",
-        "method": "宅配",
+        "method": "集運",
         "trackingNumber": "",
         "note": ""
       },
       "afterSales": {
-        "status": "",
+        "status": "pending",
         "note": "",
-        "updatedAt": "2026-09-04T05:25:04.117Z"
+        "updatedAt": "2026-09-04T05:25:17.880Z"
       },
       "notes": "",
       "createdAt": "2026-06-12",
-      "updatedAt": "2026-09-04T05:25:04.117Z",
+      "updatedAt": "2026-09-04T05:25:17.880Z",
       "workId": "honkai-star-rail",
       "series": ""
     }
