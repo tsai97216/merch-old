@@ -1,13 +1,13 @@
-import { github } from './github.js?v=2.17.5';
-import { loadData } from './data.js?v=2.17.5';
-import { createItemDetail } from './item-detail.js?v=2.17.5';
-import { createDashboard } from './dashboard.js?v=2.17.5';
-import { createCollection } from './collection.js?v=2.17.5';
-import { createStatistics } from './statistics.js?v=2.17.5';
-import { createManagement } from './management.js?v=2.17.5';
-import { createSettings } from './settings.js?v=2.17.5';
-import { attachSyncBridge } from './sync-bridge.js?v=2.17.5';
-import { getVersion, setVersion } from './version.js?v=2.17.5';
+import { github } from './github.js?v=2.17.9';
+import { loadData } from './data.js?v=2.17.9';
+import { createItemDetail } from './item-detail.js?v=2.17.9';
+import { createDashboard } from './dashboard.js?v=2.17.9';
+import { createCollection } from './collection.js?v=2.17.9';
+import { createStatistics } from './statistics.js?v=2.17.9';
+import { createManagement } from './management.js?v=2.17.9';
+import { createSettings } from './settings.js?v=2.17.9';
+import { attachSyncBridge } from './sync-bridge.js?v=2.17.9';
+import { getVersion, setVersion } from './version.js?v=2.17.9';
 
 function updateVersion() {
   const version = getVersion();
