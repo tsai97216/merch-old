@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "works": [
+    {
+      "id": "honkai-star-rail",
+      "name": "崩壞：星穹鐵道",
+      "data": "data/honkai-star-rail/data.json"
+    },
+    {
+      "id": "genshin-impact",
+      "name": "原神",
+      "data": "data/genshin-impact/data.json"
+    },
+    {
+      "id": "zenless-zone-zero",
+      "name": "絕區零",
+      "data": "data/zenless-zone-zero/data.json"
+    },
+    {
+      "id": "wuthering-waves",
+      "name": "鳴潮",
+      "data": "data/wuthering-waves/data.json"
+    }
+  ]
+}
