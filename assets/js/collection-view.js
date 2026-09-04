@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const VERSION = 'v1.9.0';
+
+  document.querySelectorAll('.sidebar-footer span:last-child, #settings dd, .footer span:last-child').forEach((element) => {
+    if (/^v\d+\.\d+\.\d+$/.test(element.textContent.trim())) {
+      element.textContent = VERSION;
+    }
+  });
+
+  document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
+    if (link.href.includes('/assets/css/style.css') || link.href.includes('/assets/css/pages.css')) {
+      const url = new URL(link.href, window.location.href);
+      url.searchParams.set('v', VERSION.slice(1));
+      link.href = url.href;
+    }
+  });
+
   const collection = document.querySelector('#collection');
   if (collection) {
     const buttons = collection.querySelectorAll('[data-view]');
@@ -43,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryPie.setAttribute('role', 'img');
   }
 
-  const categoryLegend = statistics.querySelector('.category-legend');
   const workPanel = document.createElement('section');
   workPanel.className = 'panel category-panel work-distribution-panel';
   workPanel.innerHTML = `
@@ -68,8 +83,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (twoColumns && !statistics.querySelector('.work-distribution-panel')) {
     twoColumns.appendChild(workPanel);
   }
-
-  document.querySelectorAll('.sidebar-footer span:last-child, #settings dd, .footer span:last-child').forEach((element) => {
-    if (element.textContent.trim() === 'v1.7.0') element.textContent = 'v1.9.0';
-  });
 });
