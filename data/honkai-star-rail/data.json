@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T10:24:14.752Z",
+  "updatedAt": "2026-09-04T10:32:03.109Z",
   "items": [
     {
       "id": "item-1788499886180-xm1w0h",
@@ -94,6 +94,47 @@
       },
       "createdAt": "2026-09-04T05:38:47.137Z",
       "updatedAt": "2026-09-04T05:38:47.137Z"
+    },
+    {
+      "id": "item-1788517921359-cozvvv",
+      "images": [],
+      "workId": "honkai-star-rail",
+      "title": "仲夏螢火之約系列亞克力合影卡",
+      "series": "",
+      "characters": [
+        "流螢"
+      ],
+      "category": "",
+      "manufacturer": "",
+      "status": "pending",
+      "description": "",
+      "notes": "",
+      "purchase": {
+        "price": 0,
+        "currency": "TWD",
+        "platform": "",
+        "date": "",
+        "url": "",
+        "orderId": ""
+      },
+      "release": {
+        "date": "",
+        "expectedDate": "",
+        "receivedDate": ""
+      },
+      "shipping": {
+        "status": "pending",
+        "method": "",
+        "trackingNumber": "",
+        "note": ""
+      },
+      "afterSales": {
+        "status": "none",
+        "note": "",
+        "updatedAt": "2026-09-04T10:32:01.359Z"
+      },
+      "createdAt": "2026-09-04T10:32:01.359Z",
+      "updatedAt": "2026-09-04T10:32:01.359Z"
     }
   ]
 }
