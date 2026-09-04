@@ -10,10 +10,14 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/pages.css">
   <style>
+    /* The static shell must remain usable even when a module fails to load. */
     .page { display: none; }
     #home.page { display: block; }
     html.app-ready .page { display: none !important; }
     html.app-ready .page.is-active { display: block !important; }
+    .boot-error { margin: 24px 0; padding: 18px 20px; border: 1px solid rgba(220, 70, 70, .25); border-radius: 14px; background: rgba(220, 70, 70, .06); }
+    .boot-error strong { display: block; margin-bottom: 6px; }
+    .boot-error small { display: block; margin-top: 8px; opacity: .7; word-break: break-word; }
   </style>
 </head>
 <body>
@@ -27,7 +31,7 @@
         <a class="nav-item nav-management" href="#management"><i class="fa-solid fa-pen-to-square"></i><span>管理</span></a>
         <a class="nav-item nav-settings" href="#settings"><i class="fa-solid fa-gear"></i><span>設定</span></a>
       </nav>
-      <div class="sidebar-footer"><span>MERCH DATABASE</span><span data-version>v2.19.9</span></div>
+      <div class="sidebar-footer"><span>MERCH DATABASE</span><span data-version>v2.20.9</span></div>
     </aside>
     <main class="main">
       <div class="content">
@@ -41,9 +45,27 @@
         <section id="statistics" class="page"><div class="page-heading"><div><span class="eyebrow">03 / STATISTICS</span><h2>統計</h2><p>收藏數量、花費與時間趨勢。</p></div></div><div class="stats-overview"><article class="stat-card"><span>COLLECTION</span><strong>--</strong><small>載入中</small></article><article class="stat-card"><span>PENDING</span><strong>--</strong><small>載入中</small></article><article class="stat-card"><span>TOTAL SPENDING</span><strong>--</strong><small>載入中</small></article><article class="stat-card"><span>THIS MONTH</span><strong>--</strong><small>載入中</small></article><article class="stat-card"><span>THIS YEAR</span><strong>--</strong><small>載入中</small></article></div><div class="two-column"><section class="panel"><div class="panel-heading"><div><span class="panel-label">MONTHLY</span><h3>每月新增</h3></div><span class="muted">--</span></div><div class="chart-placeholder"></div><div class="chart-labels"></div></section><section class="panel category-panel"><div class="panel-heading"><div><span class="panel-label">CATEGORY</span><h3>類型分布</h3></div><i class="fa-solid fa-chart-pie"></i></div><div class="category-chart"><div class="category-pie"></div><div class="category-legend"></div></div></section></div></section>
         <section id="management" class="page"></section><section id="settings" class="page"></section>
       </div>
-      <footer class="footer"><span>Chi MERCH</span><span>Personal Collection Database</span><span data-version>v2.19.9</span></footer>
+      <footer class="footer"><span>Chi MERCH</span><span>Personal Collection Database</span><span data-version>v2.20.9</span></footer>
     </main>
   </div>
-  <script type="module" src="assets/js/app.js?build=stable1"></script>
+  <script>
+    window.addEventListener('error', function (event) {
+      var content = document.querySelector('.content');
+      if (!content || document.documentElement.classList.contains('app-ready')) return;
+      var notice = document.createElement('div');
+      notice.className = 'boot-error';
+      notice.innerHTML = '<strong>網站程式載入失敗</strong><span>首頁骨架仍可使用，但前端模組沒有成功啟動。</span><small>' + String(event.message || 'Unknown error') + '</small>';
+      content.prepend(notice);
+    });
+    window.addEventListener('unhandledrejection', function (event) {
+      var content = document.querySelector('.content');
+      if (!content || document.documentElement.classList.contains('app-ready')) return;
+      var notice = document.createElement('div');
+      notice.className = 'boot-error';
+      notice.innerHTML = '<strong>網站程式載入失敗</strong><span>首頁骨架仍可使用，但前端模組沒有成功啟動。</span><small>' + String(event.reason?.message || event.reason || 'Unknown rejection') + '</small>';
+      content.prepend(notice);
+    });
+  </script>
+  <script type="module" src="assets/js/app.js?build=stable2"></script>
 </body>
 </html>
