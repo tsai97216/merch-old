@@ -1,6 +1,7 @@
 const REPO = 'tsai97216/merch';
 const BRANCH = 'main';
 const TOKEN_KEY = 'chi-merch-github-token';
+const VERSION_PATH = 'data/version.json';
 const API = 'https://api.github.com';
 
 const headers = (token) => ({
@@ -44,26 +45,44 @@ async function request(path, options = {}) {
   return body;
 }
 
-async function readWorkFile(workId) {
-  const body = await request(`/repos/${REPO}/contents/${pathFor(workId)}?ref=${encodeURIComponent(BRANCH)}`);
-  return {
-    sha: body.sha,
-    data: JSON.parse(decodeBase64(body.content))
-  };
+async function readFile(path) {
+  const body = await request(`/repos/${REPO}/contents/${path}?ref=${encodeURIComponent(BRANCH)}`);
+  return { sha: body.sha, data: JSON.parse(decodeBase64(body.content)) };
 }
 
-async function writeWorkFile(workId, file, message) {
+async function writeFile(path, file, message) {
   const content = JSON.stringify(file.data, null, 2) + '\n';
-  return request(`/repos/${REPO}/contents/${pathFor(workId)}`, {
+  return request(`/repos/${REPO}/contents/${path}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, content: encodeBase64(content), sha: file.sha, branch: BRANCH })
   });
 }
 
+async function readWorkFile(workId) {
+  return readFile(pathFor(workId));
+}
+
 function cleanItem(item, work) {
   const { workName, ...rest } = item;
   return { ...rest, workId: work.id };
+}
+
+async function bumpCollectionVersion(delta) {
+  const { getVersion, setVersion } = await import('./version.js');
+  const file = await readFile(VERSION_PATH);
+  const raw = String(file.data?.version || getVersion()).replace(/^v/, '');
+  const parts = raw.split('.').map(Number);
+  if (parts.length !== 3 || parts.some((part) => !Number.isInteger(part) || part < 0)) {
+    throw new Error('版本資料格式無效。');
+  }
+  parts[2] += delta;
+  const version = parts.join('.');
+  file.data = { version, updatedAt: new Date().toISOString() };
+  await writeFile(VERSION_PATH, file, `chore: bump version to v${version}`);
+  setVersion(`v${version}`);
+  window.dispatchEvent(new CustomEvent('chi-merch:version', { detail: { version: `v${version}` } }));
+  return `v${version}`;
 }
 
 export const github = {
@@ -85,7 +104,8 @@ export const github = {
     if (items.some((entry) => entry.id === item.id)) throw new Error('GitHub 上已存在相同 ID 的收藏。');
     items.push(cleanItem(item, work));
     file.data = { ...file.data, schemaVersion: file.data.schemaVersion || 1, work: work.id, name: work.name, items, updatedAt: new Date().toISOString() };
-    return writeWorkFile(work.id, file, `feat: add ${item.title}`);
+    await writeFile(pathFor(work.id), file, `feat: add ${item.title}`);
+    return { version: await bumpCollectionVersion(1) };
   },
 
   async syncUpdate(before, after, oldWork, newWork) {
@@ -94,7 +114,7 @@ export const github = {
       const items = Array.isArray(file.data.items) ? file.data.items.map((entry) => entry.id === before.id ? cleanItem(after, newWork) : entry) : [];
       if (!items.some((entry) => entry.id === before.id)) throw new Error('GitHub 上找不到要更新的收藏。');
       file.data = { ...file.data, schemaVersion: file.data.schemaVersion || 1, work: newWork.id, name: newWork.name, items, updatedAt: new Date().toISOString() };
-      return [await writeWorkFile(newWork.id, file, `fix: update ${after.title}`)];
+      return { results: [await writeFile(pathFor(newWork.id), file, `fix: update ${after.title}`)] };
     }
 
     const oldFile = await readWorkFile(oldWork.id);
@@ -106,13 +126,13 @@ export const github = {
     oldFile.data = { ...oldFile.data, items: oldItems, updatedAt: new Date().toISOString() };
     newFile.data = { ...newFile.data, items: newItems, updatedAt: new Date().toISOString() };
     const result = [];
-    result.push(await writeWorkFile(oldWork.id, oldFile, `refactor: move ${after.title}`));
+    result.push(await writeFile(pathFor(oldWork.id), oldFile, `refactor: move ${after.title}`));
     try {
-      result.push(await writeWorkFile(newWork.id, newFile, `refactor: move ${after.title}`));
+      result.push(await writeFile(pathFor(newWork.id), newFile, `refactor: move ${after.title}`));
     } catch (error) {
       throw new Error(`原作品已更新，但新作品寫入失敗：${error.message}`);
     }
-    return result;
+    return { results: result };
   },
 
   async syncDelete(item, work) {
@@ -120,6 +140,7 @@ export const github = {
     const items = Array.isArray(file.data.items) ? file.data.items.filter((entry) => entry.id !== item.id) : [];
     if (items.length === file.data.items?.length) throw new Error('GitHub 上找不到要刪除的收藏。');
     file.data = { ...file.data, items, updatedAt: new Date().toISOString() };
-    return writeWorkFile(work.id, file, `feat: remove ${item.title}`);
+    await writeFile(pathFor(work.id), file, `feat: remove ${item.title}`);
+    return { version: await bumpCollectionVersion(1) };
   }
 };
