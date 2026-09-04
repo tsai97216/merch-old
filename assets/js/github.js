@@ -11,23 +11,14 @@ const VERSION_PATH = 'data/version.json';
 let token = sessionStorage.getItem(SESSION_KEY) || '';
 
 function headers() {
-  return {
-    Accept: 'application/vnd.github+json',
-    Authorization: `Bearer ${token}`,
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
+  return { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
 }
 
 async function request(path, options = {}) {
   if (!token) throw new Error('尚未連接 GitHub。');
-  const response = await fetch(`${API_BASE}/${path}`, {
-    ...options,
-    headers: { ...headers(), ...(options.headers || {}) }
-  });
+  const response = await fetch(`${API_BASE}/${path}`, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
   const body = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(body.message || `GitHub API 錯誤：${response.status}`);
-  }
+  if (!response.ok) throw new Error(body.message || `GitHub API 錯誤：${response.status}`);
   return body;
 }
 
@@ -55,24 +46,14 @@ function encodeBytes(bytes) {
 
 export async function readFile(path) {
   const data = await request(`contents/${path}?ref=${encodeURIComponent(BRANCH)}`);
-  return {
-    path,
-    sha: data.sha,
-    url: data.html_url,
-    data: JSON.parse(decodeText(data.content))
-  };
+  return { path, sha: data.sha, url: data.html_url, data: JSON.parse(decodeText(data.content)) };
 }
 
 async function writeFile(path, file, message) {
   const response = await request(`contents/${path}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      message,
-      content: encodeText(JSON.stringify(file.data, null, 2) + '\n'),
-      sha: file.sha,
-      branch: BRANCH
-    })
+    body: JSON.stringify({ message, content: encodeText(JSON.stringify(file.data, null, 2) + '\n'), sha: file.sha, branch: BRANCH })
   });
   return response.commit.sha;
 }
@@ -86,23 +67,11 @@ async function readWorkFile(workId) {
 
 function cleanItem(item) {
   return {
-    id: item.id,
-    images: Array.isArray(item.images) ? item.images : [],
-    workId: item.workId,
-    title: item.title,
-    series: item.series || '',
-    characters: Array.isArray(item.characters) ? item.characters : [],
-    category: item.category || '',
-    manufacturer: item.manufacturer || '',
-    status: item.status || '',
-    description: item.description || '',
-    notes: item.notes || '',
-    purchase: item.purchase || {},
-    release: item.release || {},
-    shipping: item.shipping || {},
-    afterSales: item.afterSales || {},
-    createdAt: item.createdAt || '',
-    updatedAt: item.updatedAt || ''
+    id: item.id, images: Array.isArray(item.images) ? item.images : [], workId: item.workId, title: item.title,
+    series: item.series || '', characters: Array.isArray(item.characters) ? item.characters : [], category: item.category || '',
+    manufacturer: item.manufacturer || '', status: item.status || '', description: item.description || '', notes: item.notes || '',
+    purchase: item.purchase || {}, release: item.release || {}, shipping: item.shipping || {}, afterSales: item.afterSales || {},
+    createdAt: item.createdAt || '', updatedAt: item.updatedAt || ''
   };
 }
 
@@ -110,9 +79,7 @@ async function bumpCollectionVersion(delta) {
   const file = await readFile(VERSION_PATH);
   const raw = String(file.data?.version || getVersion()).replace(/^v/, '');
   const parts = raw.split('.').map(Number);
-  if (parts.length !== 3 || parts.some((part) => !Number.isInteger(part) || part < 0)) {
-    throw new Error('版本資料格式無效。');
-  }
+  if (parts.length !== 3 || parts.some((part) => !Number.isInteger(part) || part < 0)) throw new Error('版本資料格式無效。');
   parts[2] += delta;
   const version = parts.join('.');
   file.data = { version, updatedAt: new Date().toISOString() };
@@ -123,9 +90,7 @@ async function bumpCollectionVersion(delta) {
 }
 
 export const github = {
-  get connected() {
-    return Boolean(token);
-  },
+  get connected() { return Boolean(token); },
   connect(nextToken) {
     token = nextToken.trim();
     if (!token) throw new Error('請輸入 GitHub Token。');
@@ -138,38 +103,50 @@ export const github = {
     window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: false } }));
   },
   async test() {
-    const data = await request('contents/data/works.json?ref=' + encodeURIComponent(BRANCH));
+    const data = await request(`contents/${WORK_INDEX_PATH}?ref=${encodeURIComponent(BRANCH)}`);
     return Boolean(data.sha);
   },
   async readAllWorks() {
     const index = await readFile(WORK_INDEX_PATH);
-    const works = await Promise.all(index.data.works.map(async (work) => {
-      const file = await readFile(work.data);
-      return { ...work, file };
-    }));
+    const works = await Promise.all(index.data.works.map(async (work) => ({ ...work, file: await readFile(work.data) })));
     return { index, works };
   },
   async syncAdd(item) {
     const file = await readWorkFile(item.workId);
-    file.data.items = [...file.data.items, cleanItem(item)];
+    file.data.items = [...(file.data.items || []), cleanItem(item)];
     file.data.updatedAt = new Date().toISOString();
     await writeFile(file.path, file, `feat: add collection item ${item.id}`);
     return { version: await bumpCollectionVersion(1) };
   },
-  async syncUpdate(item) {
-    const target = await readWorkFile(item.workId);
-    const next = cleanItem(item);
-    const index = target.data.items.findIndex((entry) => entry.id === item.id);
-    if (index < 0) throw new Error('找不到要更新的收藏。');
-    target.data.items[index] = next;
-    target.data.updatedAt = new Date().toISOString();
-    await writeFile(target.path, target, `feat: update collection item ${item.id}`);
-    return { version: getVersion() };
+  async syncUpdate(before, after, oldWork, newWork) {
+    if (!oldWork || !newWork) throw new Error('找不到收藏所屬作品。');
+    if (oldWork.id === newWork.id) {
+      const file = await readWorkFile(newWork.id);
+      const items = (file.data.items || []).map((entry) => entry.id === before.id ? cleanItem(after) : entry);
+      if (!items.some((entry) => entry.id === before.id)) throw new Error('找不到要更新的收藏。');
+      file.data = { ...file.data, items, updatedAt: new Date().toISOString() };
+      return { results: [await writeFile(file.path, file, `fix: update ${after.title}`)] };
+    }
+    const oldFile = await readWorkFile(oldWork.id);
+    const newFile = await readWorkFile(newWork.id);
+    const oldItems = (oldFile.data.items || []).filter((entry) => entry.id !== before.id);
+    const newItems = [...(newFile.data.items || [])];
+    if (newItems.some((entry) => entry.id === after.id)) throw new Error('目標作品已有相同 ID 的收藏。');
+    newItems.push(cleanItem(after));
+    oldFile.data = { ...oldFile.data, items: oldItems, updatedAt: new Date().toISOString() };
+    newFile.data = { ...newFile.data, items: newItems, updatedAt: new Date().toISOString() };
+    const results = [await writeFile(oldFile.path, oldFile, `refactor: move ${after.title}`)];
+    try {
+      results.push(await writeFile(newFile.path, newFile, `refactor: move ${after.title}`));
+    } catch (error) {
+      throw new Error(`原作品已更新，但新作品寫入失敗：${error.message}`);
+    }
+    return { results };
   },
   async syncDelete(item) {
     const file = await readWorkFile(item.workId);
-    const before = file.data.items.length;
-    file.data.items = file.data.items.filter((entry) => entry.id !== item.id);
+    const before = (file.data.items || []).length;
+    file.data.items = (file.data.items || []).filter((entry) => entry.id !== item.id);
     if (file.data.items.length === before) throw new Error('找不到要刪除的收藏。');
     file.data.updatedAt = new Date().toISOString();
     await writeFile(file.path, file, `feat: delete collection item ${item.id}`);
@@ -181,30 +158,15 @@ export const github = {
     const response = await request(`contents/${path}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message,
-        content: encodeBytes(bytes),
-        branch: BRANCH
-      })
+      body: JSON.stringify({ message, content: encodeBytes(bytes), branch: BRANCH })
     });
-    return {
-      path,
-      sha: response.content?.sha || '',
-      url: response.content?.download_url || `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${path}`,
-      commit: response.commit?.sha || ''
-    };
+    return { path, sha: response.content?.sha || '', url: response.content?.download_url || `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${path}`, commit: response.commit?.sha || '' };
   },
   async deleteFile(path, sha, message) {
-    const response = await request(`contents/${path}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, sha, branch: BRANCH })
-    });
+    const response = await request(`contents/${path}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sha, branch: BRANCH }) });
     return response.commit.sha;
   },
-  async bumpImageVersion(delta = 1) {
-    return bumpCollectionVersion(delta);
-  }
+  async bumpImageVersion(delta = 1) { return bumpCollectionVersion(delta); }
 };
 
 export { REPO_OWNER, REPO_NAME, BRANCH };
