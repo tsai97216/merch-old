@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "work": "zenless-zone-zero",
   "name": "絕區零",
-  "updatedAt": "2026-09-04T05:27:31.987Z",
+  "updatedAt": "2026-09-04T05:27:33.741Z",
   "items": [
     {
       "id": "item-1788499604827-8xrmwb",
@@ -40,10 +40,10 @@
       "afterSales": {
         "status": "none",
         "note": "",
-        "updatedAt": "2026-09-04T05:27:09.834Z"
+        "updatedAt": "2026-09-04T05:27:33.273Z"
       },
       "createdAt": "2026-09-04T05:26:44.826Z",
-      "updatedAt": "2026-09-04T05:27:09.834Z"
+      "updatedAt": "2026-09-04T05:27:33.273Z"
     }
   ]
 }
