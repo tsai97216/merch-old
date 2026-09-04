@@ -2,6 +2,24 @@
   "schemaVersion": 1,
   "work": "zenless-zone-zero",
   "name": "絕區零",
-  "updatedAt": "",
-  "items": []
+  "updatedAt": "2026-09-04",
+  "items": [
+    {
+      "id": "zzz-nicole-tapestry",
+      "title": "妮可掛軸",
+      "characters": ["妮可"],
+      "category": "掛軸",
+      "manufacturer": "示範製造商",
+      "description": "妮可主題掛軸。",
+      "status": "preorder",
+      "images": [],
+      "purchase": { "price": 1280, "currency": "TWD", "platform": "官方商城", "date": "2026-08-10", "url": "", "orderId": "" },
+      "release": { "date": "2026-10", "expectedDate": "2026-10", "receivedDate": "" },
+      "shipping": { "status": "not_shipped", "method": "待出貨", "trackingNumber": "", "note": "" },
+      "afterSales": { "status": "無", "note": "", "updatedAt": "" },
+      "notes": "預購商品，等待發售。",
+      "createdAt": "2026-08-10",
+      "updatedAt": "2026-08-10"
+    }
+  ]
 }
