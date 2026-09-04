@@ -1,4 +1,4 @@
-import { github } from './github.js?v=2.13.3';
+import { github } from './github.js?v=2.14.0';
 
 const value = (form, name) => form.elements[name]?.value?.trim() || '';
 const setStatus = (management, text, kind = '') => {
@@ -7,6 +7,7 @@ const setStatus = (management, text, kind = '') => {
   if (status) status.textContent = text;
   if (message) { message.textContent = text; message.dataset.kind = kind; }
 };
+const showSuccess = (message) => window.alert(message);
 
 function buildItem(form, old) {
   const now = new Date().toISOString();
@@ -55,6 +56,7 @@ export function attachSyncBridge(management, store) {
       if (old) { await github.syncUpdate(old, next, oldWork, newWork); store.updateItem(activeId, next); }
       else { await github.syncAdd(next); store.addItem(next); }
       setStatus(management, '已儲存並同步到 GitHub。', 'success');
+      showSuccess('儲存成功！\n資料已同步到 GitHub。');
     } catch (error) { setStatus(management, `同步失敗：${error.message}`, 'error'); }
     finally { submitButton.disabled = false; }
   }, true);
@@ -67,7 +69,7 @@ export function attachSyncBridge(management, store) {
       const item = getActiveItem(management, store);
       if (!item || !window.confirm(`確定要刪除「${item.title}」嗎？`)) return;
       deleteButton.disabled = true; setStatus(management, '正在同步刪除…');
-      try { await github.syncDelete(item); store.removeItem(item.id); setStatus(management, '已刪除並同步到 GitHub。', 'success'); }
+      try { await github.syncDelete(item); store.removeItem(item.id); setStatus(management, '已刪除並同步到 GitHub。', 'success'); showSuccess('刪除成功！\n資料已同步到 GitHub。'); }
       catch (error) { setStatus(management, `刪除失敗：${error.message}`, 'error'); }
       finally { deleteButton.disabled = false; }
       return;
@@ -82,7 +84,7 @@ export function attachSyncBridge(management, store) {
       if (!images.some((image) => image.isCover)) return;
       const next = { ...item, images, updatedAt: new Date().toISOString() };
       coverButton.disabled = true; setStatus(management, '正在更新封面…');
-      try { await github.syncUpdate(item, next, store.getWork(item.workId), store.getWork(item.workId)); store.updateItem(item.id, next); setStatus(management, '封面已更新。', 'success'); }
+      try { await github.syncUpdate(item, next, store.getWork(item.workId), store.getWork(item.workId)); store.updateItem(item.id, next); setStatus(management, '封面已更新。', 'success'); showSuccess('封面更新成功！'); }
       catch (error) { setStatus(management, `封面更新失敗：${error.message}`, 'error'); }
       finally { coverButton.disabled = false; }
       return;
@@ -102,7 +104,7 @@ export function attachSyncBridge(management, store) {
         await github.syncUpdate(item, next, store.getWork(item.workId), store.getWork(item.workId));
         if (image.path && image.sha) await github.deleteFile(image.path, image.sha, `feat: delete image ${image.id || 'unknown'}`);
         await github.bumpImageVersion(1);
-        store.updateItem(item.id, next); setStatus(management, '圖片已刪除並同步到 GitHub。', 'success');
+        store.updateItem(item.id, next); setStatus(management, '圖片已刪除並同步到 GitHub。', 'success'); showSuccess('圖片刪除成功！\n資料已同步到 GitHub。');
       } catch (error) { setStatus(management, `圖片刪除失敗：${error.message}`, 'error'); }
       finally { imageDelete.disabled = false; }
     }
@@ -131,7 +133,7 @@ export function attachSyncBridge(management, store) {
       const next = { ...item, images, updatedAt: new Date().toISOString() };
       await github.syncUpdate(item, next, work, work);
       await github.bumpImageVersion(files.length);
-      store.updateItem(item.id, next); setStatus(management, `已上傳 ${files.length} 張圖片並同步到 GitHub。`, 'success');
+      store.updateItem(item.id, next); setStatus(management, `已上傳 ${files.length} 張圖片並同步到 GitHub。`, 'success'); showSuccess(`圖片上傳成功！\n已上傳 ${files.length} 張圖片並同步到 GitHub。`);
     } catch (error) { setStatus(management, `圖片上傳失敗：${error.message}`, 'error'); }
     finally { input.disabled = false; input.value = ''; }
   }, true);
