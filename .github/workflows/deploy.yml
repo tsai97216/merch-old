@@ -3,6 +3,12 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/css/**'
+      - 'assets/js/**'
+      - 'CNAME'
+      - '.nojekyll'
   workflow_dispatch:
 
 permissions:
