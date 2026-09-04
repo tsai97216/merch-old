@@ -2,48 +2,6 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T05:25:27.261Z",
-  "items": [
-    {
-      "id": "hsr-firefly-17-scale",
-      "title": "流螢 春日手信 1/8 比例模型",
-      "characters": [
-        "流螢"
-      ],
-      "category": "模型",
-      "manufacturer": "",
-      "description": "流螢 1/8 比例收藏模型。",
-      "status": "received",
-      "images": [],
-      "purchase": {
-        "price": 1375,
-        "currency": "TWD",
-        "platform": "米哈遊淘寶",
-        "date": "2026-08-05",
-        "url": "",
-        "orderId": ""
-      },
-      "release": {
-        "date": "",
-        "expectedDate": "",
-        "receivedDate": "2026-08-14"
-      },
-      "shipping": {
-        "status": "received",
-        "method": "集運",
-        "trackingNumber": "",
-        "note": ""
-      },
-      "afterSales": {
-        "status": "pending",
-        "note": "",
-        "updatedAt": "2026-09-04T05:25:26.745Z"
-      },
-      "notes": "",
-      "createdAt": "2026-06-12",
-      "updatedAt": "2026-09-04T05:25:26.745Z",
-      "workId": "honkai-star-rail",
-      "series": ""
-    }
-  ]
+  "updatedAt": "2026-09-04T05:30:12.038Z",
+  "items": []
 }
