@@ -1,6 +1,6 @@
 import { getVersion, setVersion } from './version.js';
 
-const API_BASE = 'https://api.merch.chi.qzz.io';
+const API_BASE = 'https://chi-merch-api.tsai97216.workers.dev';
 const REPO_OWNER = 'tsai97216';
 const REPO_NAME = 'merch';
 const BRANCH = 'main';
