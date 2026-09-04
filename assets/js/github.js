@@ -1,4 +1,4 @@
-import { getVersion, setVersion } from './version.js';
+import { getVersion, setVersion } from './version.js?v=2.8.3';
 
 const API_BASE = 'https://chi-merch-api.tsai97216.workers.dev';
 const REPO_OWNER = 'tsai97216';
