@@ -2,6 +2,24 @@
   "schemaVersion": 1,
   "work": "wuthering-waves",
   "name": "鳴潮",
-  "updatedAt": "",
-  "items": []
+  "updatedAt": "2026-09-04",
+  "items": [
+    {
+      "id": "ww-jinhsi-acrylic-stand",
+      "title": "今汐壓克力立牌",
+      "characters": ["今汐"],
+      "category": "壓克力",
+      "manufacturer": "示範製造商",
+      "description": "今汐主題壓克力立牌。",
+      "status": "received",
+      "images": [],
+      "purchase": { "price": 450, "currency": "TWD", "platform": "蝦皮", "date": "2026-08-02", "url": "", "orderId": "" },
+      "release": { "date": "2026-08", "expectedDate": "", "receivedDate": "2026-08-18" },
+      "shipping": { "status": "delivered", "method": "超商取貨", "trackingNumber": "", "note": "" },
+      "afterSales": { "status": "無", "note": "", "updatedAt": "" },
+      "notes": "示範資料。",
+      "createdAt": "2026-08-02",
+      "updatedAt": "2026-08-18"
+    }
+  ]
 }
