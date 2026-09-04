@@ -1,4 +1,4 @@
-import { github } from './github.js?v=2.17.5';
+import { github } from './github.js?v=2.17.9';
 
 const WORK_INDEX_PATH = 'data/works.json';
 
