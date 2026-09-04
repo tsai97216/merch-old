@@ -1,12 +1,13 @@
-import { loadData } from './data.js?v=2.16.5';
-import { createItemDetail } from './item-detail.js?v=2.16.5';
-import { createDashboard } from './dashboard.js?v=2.16.5';
-import { createCollection } from './collection.js?v=2.16.5';
-import { createStatistics } from './statistics.js?v=2.16.5';
-import { createManagement } from './management.js?v=2.16.5';
-import { createSettings } from './settings.js?v=2.16.5';
-import { attachSyncBridge } from './sync-bridge.js?v=2.16.5';
-import { getVersion, setVersion } from './version.js?v=2.16.5';
+import { github } from './github.js?v=2.17.5';
+import { loadData } from './data.js?v=2.17.5';
+import { createItemDetail } from './item-detail.js?v=2.17.5';
+import { createDashboard } from './dashboard.js?v=2.17.5';
+import { createCollection } from './collection.js?v=2.17.5';
+import { createStatistics } from './statistics.js?v=2.17.5';
+import { createManagement } from './management.js?v=2.17.5';
+import { createSettings } from './settings.js?v=2.17.5';
+import { attachSyncBridge } from './sync-bridge.js?v=2.17.5';
+import { getVersion, setVersion } from './version.js?v=2.17.5';
 
 function updateVersion() {
   const version = getVersion();
@@ -33,12 +34,13 @@ function showError(error) {
   if (content) {
     const notice = document.createElement('div');
     notice.className = 'data-error';
-    notice.innerHTML = '<strong>資料載入失敗</strong><p>無法讀取收藏資料庫，請確認網站可以正常讀取 data/ 下的 JSON 檔案。</p>';
+    notice.innerHTML = '<strong>資料載入失敗</strong><p>無法讀取收藏資料庫，請確認網站可以正常讀取資料 API。</p>';
     content.prepend(notice);
   }
 }
 
 async function boot() {
+  try { await github.loadVersion(); } catch (error) { console.warn('[Chi MERCH] remote version unavailable:', error); }
   updateVersion();
   try {
     const data = await loadData();
