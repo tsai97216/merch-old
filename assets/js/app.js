@@ -1,16 +1,16 @@
-import { loadData } from './data.js?v=2.14.5';
-import { createItemDetail } from './item-detail.js?v=2.14.5';
-import { createDashboard } from './dashboard.js?v=2.14.5';
-import { createCollection } from './collection.js?v=2.14.5';
-import { createStatistics } from './statistics.js?v=2.14.5';
-import { createManagement } from './management.js?v=2.14.5';
-import { createSettings } from './settings.js?v=2.14.5';
-import { attachSyncBridge } from './sync-bridge.js?v=2.14.5';
-import { getVersion, setVersion } from './version.js?v=2.14.5';
+import { loadData } from './data.js?v=2.16.5';
+import { createItemDetail } from './item-detail.js?v=2.16.5';
+import { createDashboard } from './dashboard.js?v=2.16.5';
+import { createCollection } from './collection.js?v=2.16.5';
+import { createStatistics } from './statistics.js?v=2.16.5';
+import { createManagement } from './management.js?v=2.16.5';
+import { createSettings } from './settings.js?v=2.16.5';
+import { attachSyncBridge } from './sync-bridge.js?v=2.16.5';
+import { getVersion, setVersion } from './version.js?v=2.16.5';
 
 function updateVersion() {
   const version = getVersion();
-  document.querySelectorAll('.sidebar-footer span:last-child,#settings dd,.footer span:last-child').forEach((element) => {
+  document.querySelectorAll('.sidebar-footer span:last-child,#settings dd,.footer span:last-child,[data-version]').forEach((element) => {
     if (/^v\d+\.\d+\.\d+$/.test(element.textContent.trim())) element.textContent = version;
   });
   document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
