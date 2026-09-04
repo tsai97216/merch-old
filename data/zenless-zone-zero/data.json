@@ -2,11 +2,20 @@
   "schemaVersion": 1,
   "work": "zenless-zone-zero",
   "name": "絕區零",
-  "updatedAt": "2026-09-04T05:32:09.980Z",
+  "updatedAt": "2026-09-04T10:21:13.537Z",
   "items": [
     {
       "id": "item-1788499604827-8xrmwb",
-      "images": [],
+      "images": [
+        {
+          "id": "image-1788517269456-b9dv5w",
+          "path": "data/zenless-zone-zero/images/item-1788499604827-8xrmwb/image-1788517269456-b9dv5w.jpg",
+          "url": "https://raw.githubusercontent.com/tsai97216/merch/main/data/zenless-zone-zero/images/item-1788499604827-8xrmwb/image-1788517269456-b9dv5w.jpg",
+          "sha": "53e570ae33c320b69a54ee5439af714cc7c4927e",
+          "alt": "蕾米埃爾 影畫系列 吧唧",
+          "isCover": true
+        }
+      ],
       "workId": "zenless-zone-zero",
       "title": "蕾米埃爾 影畫系列 吧唧",
       "series": "",
@@ -43,7 +52,7 @@
         "updatedAt": "2026-09-04T05:32:09.119Z"
       },
       "createdAt": "2026-09-04T05:26:44.826Z",
-      "updatedAt": "2026-09-04T05:32:09.119Z"
+      "updatedAt": "2026-09-04T10:21:12.272Z"
     }
   ]
 }
