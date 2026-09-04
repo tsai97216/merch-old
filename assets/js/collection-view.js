@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const VERSION = 'v1.14.0';
+  const VERSION = 'v1.15.0';
 
   document.querySelectorAll('.sidebar-footer span:last-child, #settings dd, .footer span:last-child').forEach((element) => {
     if (/^v\d+\.\d+\.\d+$/.test(element.textContent.trim())) element.textContent = VERSION;
@@ -28,24 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
 
     const details = {
-      '流螢 1/7 比例模型': {
-        work: '崩壞：星穹鐵道', character: '流螢', type: '模型', manufacturer: '示範製造商', status: '已收到', price: 'NT$ 3,200', platform: '官方商城', purchaseDate: '2026-06-12', releaseDate: '2026-08', receivedDate: '2026-08-24', shipping: '宅配', tracking: '—', afterSales: '無', description: '流螢 1/7 比例收藏模型。', notes: '示範資料，之後由作品資料庫提供完整內容。', createdAt: '2026-06-12', updatedAt: '2026-08-24'
-      },
-      '銀狼系列周邊': {
-        work: '崩壞：星穹鐵道', character: '銀狼', type: '其他', manufacturer: '示範製造商', status: '待整理', price: 'NT$ 980', platform: '淘寶', purchaseDate: '2026-07-03', releaseDate: '2026-09', receivedDate: '—', shipping: '集運', tracking: '—', afterSales: '無', description: '銀狼系列周邊收藏。', notes: '待補充商品規格與圖片。', createdAt: '2026-07-03', updatedAt: '2026-07-03'
-      },
-      '妮可掛軸': {
-        work: '絕區零', character: '妮可', type: '掛軸', manufacturer: '示範製造商', status: '預購', price: 'NT$ 1,280', platform: '官方商城', purchaseDate: '2026-08-10', releaseDate: '2026-10', receivedDate: '—', shipping: '待出貨', tracking: '—', afterSales: '無', description: '妮可主題掛軸。', notes: '預購商品，等待發售。', createdAt: '2026-08-10', updatedAt: '2026-08-10'
-      },
-      '今汐壓克力立牌': {
-        work: '鳴潮', character: '今汐', type: '壓克力', manufacturer: '示範製造商', status: '已收到', price: 'NT$ 450', platform: '蝦皮', purchaseDate: '2026-08-02', releaseDate: '2026-08', receivedDate: '2026-08-18', shipping: '超商取貨', tracking: '—', afterSales: '無', description: '今汐主題壓克力立牌。', notes: '—', createdAt: '2026-08-02', updatedAt: '2026-08-18'
-      },
-      '芙寧娜徽章組': {
-        work: '原神', character: '芙寧娜', type: '徽章', manufacturer: '示範製造商', status: '已收到', price: 'NT$ 320', platform: '同人展', purchaseDate: '2026-08-16', releaseDate: '2026-08', receivedDate: '2026-08-16', shipping: '現場取得', tracking: '—', afterSales: '無', description: '芙寧娜主題徽章組。', notes: '—', createdAt: '2026-08-16', updatedAt: '2026-08-16'
-      },
-      '示範收藏': {
-        work: '作品', character: '角色', type: '其他', manufacturer: '—', status: '待整理', price: 'NT$ 680', platform: '—', purchaseDate: '—', releaseDate: '—', receivedDate: '—', shipping: '—', tracking: '—', afterSales: '—', description: '用於展示詳細資訊介面的示範資料。', notes: '之後替換為正式收藏資料。', createdAt: '—', updatedAt: '—'
-      }
+      '流螢 1/7 比例模型': { work: '崩壞：星穹鐵道', character: '流螢', type: '模型', manufacturer: '示範製造商', status: '已收到', price: 'NT$ 3,200', platform: '官方商城', purchaseDate: '2026-06-12', releaseDate: '2026-08', receivedDate: '2026-08-24', shipping: '宅配', tracking: '—', afterSales: '無', description: '流螢 1/7 比例收藏模型。', notes: '示範資料，之後由作品資料庫提供完整內容。', createdAt: '2026-06-12', updatedAt: '2026-08-24' },
+      '銀狼系列周邊': { work: '崩壞：星穹鐵道', character: '銀狼', type: '其他', manufacturer: '示範製造商', status: '待整理', price: 'NT$ 980', platform: '淘寶', purchaseDate: '2026-07-03', releaseDate: '2026-09', receivedDate: '—', shipping: '集運', tracking: '—', afterSales: '無', description: '銀狼系列周邊收藏。', notes: '待補充商品規格與圖片。', createdAt: '2026-07-03', updatedAt: '2026-07-03' },
+      '妮可掛軸': { work: '絕區零', character: '妮可', type: '掛軸', manufacturer: '示範製造商', status: '預購', price: 'NT$ 1,280', platform: '官方商城', purchaseDate: '2026-08-10', releaseDate: '2026-10', receivedDate: '—', shipping: '待出貨', tracking: '—', afterSales: '無', description: '妮可主題掛軸。', notes: '預購商品，等待發售。', createdAt: '2026-08-10', updatedAt: '2026-08-10' },
+      '今汐壓克力立牌': { work: '鳴潮', character: '今汐', type: '壓克力', manufacturer: '示範製造商', status: '已收到', price: 'NT$ 450', platform: '蝦皮', purchaseDate: '2026-08-02', releaseDate: '2026-08', receivedDate: '2026-08-18', shipping: '超商取貨', tracking: '—', afterSales: '無', description: '今汐主題壓克力立牌。', notes: '—', createdAt: '2026-08-02', updatedAt: '2026-08-18' },
+      '芙寧娜徽章組': { work: '原神', character: '芙寧娜', type: '徽章', manufacturer: '示範製造商', status: '已收到', price: 'NT$ 320', platform: '同人展', purchaseDate: '2026-08-16', releaseDate: '2026-08', receivedDate: '2026-08-16', shipping: '現場取得', tracking: '—', afterSales: '無', description: '芙寧娜主題徽章組。', notes: '—', createdAt: '2026-08-16', updatedAt: '2026-08-16' },
+      '示範收藏': { work: '作品', character: '角色', type: '其他', manufacturer: '—', status: '待整理', price: 'NT$ 680', platform: '—', purchaseDate: '—', releaseDate: '—', receivedDate: '—', shipping: '—', tracking: '—', afterSales: '—', description: '用於展示詳細資訊介面的示範資料。', notes: '之後替換為正式收藏資料。', createdAt: '—', updatedAt: '—' }
     };
 
     const modal = document.createElement('div');
@@ -73,17 +61,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const item = details[title] || { work: '—', character: '—', type: '—', manufacturer: '—', status: '待整理', price: '—', platform: '—', purchaseDate: '—', releaseDate: '—', receivedDate: '—', shipping: '—', tracking: '—', afterSales: '—', description: '尚未建立詳細資料。', notes: '可在管理頁補充。', createdAt: '—', updatedAt: '—' };
       setText('item-detail-title', title || '收藏詳細資訊');
       setText('item-detail-subtitle', `${item.work} · ${item.character}`);
-      setText('item-detail-work', item.work); setText('item-detail-character', item.character); setText('item-detail-type', item.type); setText('item-detail-manufacturer', item.manufacturer);
       setText('detail-work', item.work); setText('detail-character', item.character); setText('detail-type', item.type); setText('detail-manufacturer', item.manufacturer);
       setText('detail-price', item.price); setText('detail-platform', item.platform); setText('detail-purchase-date', item.purchaseDate);
       setText('detail-release-date', item.releaseDate); setText('detail-received-date', item.receivedDate); setText('detail-shipping', item.shipping); setText('detail-tracking', item.tracking); setText('detail-after-sales', item.afterSales);
       setText('detail-description', item.description); setText('detail-notes', item.notes); setText('detail-created', item.createdAt); setText('detail-updated', item.updatedAt);
       const status = modal.querySelector('#item-detail-status');
       status.innerHTML = `<span class="tag ${item.status === '已收到' ? 'received' : 'pending'}">${item.status}</span>`;
-      modal.hidden = false; document.body.classList.add('detail-modal-open');
+      modal.hidden = false;
+      document.body.classList.add('detail-modal-open');
     };
     const closeDetail = () => { modal.hidden = true; document.body.classList.remove('detail-modal-open'); };
-    collection.querySelectorAll('.item-card, .collection-list-row').forEach((item) => {
+    document.querySelectorAll('#home .item-card, #collection .item-card, #collection .collection-list-row').forEach((item) => {
       item.setAttribute('role', 'button'); item.setAttribute('tabindex', '0');
       item.addEventListener('click', () => openDetail(item));
       item.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDetail(item); } });
