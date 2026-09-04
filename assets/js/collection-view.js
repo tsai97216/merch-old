@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const VERSION = 'v1.12.0';
+  const VERSION = 'v1.13.0';
 
   document.querySelectorAll('.sidebar-footer span:last-child, #settings dd, .footer span:last-child').forEach((element) => {
     if (/^v\d+\.\d+\.\d+$/.test(element.textContent.trim())) element.textContent = VERSION;
@@ -42,6 +42,40 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: '鳴潮', count: 18, received: 15, pending: 3, spending: '10,700', month: '1,580', year: '7,420', characters: [['今汐',6],['長離',4],['吟霖',3],['守岸人',2]], categories: [['模型',6],['壓克力',5],['徽章',4],['其他',3]] }
   ];
 
+  const renderPie = (container, data, label, colors) => {
+    const total = data.reduce((sum, item) => sum + item[1], 0);
+    let angle = 0;
+    const stops = data.map((item, index) => {
+      const next = angle + item[1] / total * 360;
+      const stop = `${colors[index % colors.length]} ${angle}deg ${next}deg`;
+      angle = next;
+      return stop;
+    });
+    container.style.background = `conic-gradient(${stops.join(', ')})`;
+    container.setAttribute('role', 'img');
+    container.setAttribute('aria-label', label);
+  };
+
+  const renderAll = () => {
+    overview.style.display = 'grid';
+    overview.innerHTML = `
+      <article class="stat-card"><span>COLLECTION</span><strong>128</strong><small>收藏件數</small></article>
+      <article class="stat-card"><span>RECEIVED</span><strong>104</strong><small>已收到</small></article>
+      <article class="stat-card"><span>PENDING</span><strong>24</strong><small>尚未收到</small></article>
+      <article class="stat-card"><span>TOTAL SPENDING</span><strong>NT$ 86,420</strong><small>全部收藏</small></article>
+      <article class="stat-card"><span>THIS MONTH</span><strong>NT$ 12,680</strong><small>本月花費</small></article>
+      <article class="stat-card"><span>THIS YEAR</span><strong>NT$ 58,240</strong><small>今年花費</small></article>`;
+
+    chartArea.style.display = 'grid';
+    chartArea.innerHTML = `
+      <section class="panel"><div class="panel-heading"><div><span class="panel-label">MONTHLY</span><h3>每月新增</h3></div><span class="muted">2026</span></div><div class="chart-placeholder"><i style="height:35%"></i><i style="height:48%"></i><i style="height:42%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:76%"></i><i style="height:68%"></i><i style="height:88%"></i><i style="height:72%"></i><i style="height:92%"></i><i style="height:82%"></i><i style="height:66%"></i></div><div class="chart-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div></section>
+      <section class="panel category-panel"><div class="panel-heading"><div><span class="panel-label">BY WORK</span><h3>作品分布</h3></div><i class="fa-solid fa-chart-pie"></i></div><div class="category-chart"><div class="category-pie work-distribution-pie"></div><div class="category-legend">${works.map((work, index) => `<div><i class="legend-dot stat-work-${index}"></i><span>${work.name}</span><b>${work.count}</b></div>`).join('')}</div></div></section>
+      <section class="panel category-panel"><div class="panel-heading"><div><span class="panel-label">CATEGORY</span><h3>類型分布</h3></div><i class="fa-solid fa-chart-pie"></i></div><div class="category-chart"><div class="category-pie category-distribution-pie" role="img" aria-label="類型分布圓餅圖"></div><div class="category-legend"><div><i class="legend-dot model"></i><span>模型</span><b>46</b></div><div><i class="legend-dot acrylic"></i><span>壓克力</span><b>31</b></div><div><i class="legend-dot badge"></i><span>徽章</span><b>24</b></div><div><i class="legend-dot other"></i><span>其他</span><b>27</b></div></div></div></section>`;
+
+    renderPie(chartArea.querySelector('.work-distribution-pie'), works.map((work) => [work.name, work.count]), '作品分布圓餅圖', ['var(--accent)', '#6f8fdc', '#8da7d7', '#b9c7dc']);
+    renderPie(chartArea.querySelector('.category-distribution-pie'), [['模型',46],['壓克力',31],['徽章',24],['其他',27]], '類型分布圓餅圖', ['var(--accent)', '#6f8fdc', '#8da7d7', '#b9c7dc']);
+  };
+
   const tabs = document.createElement('div');
   tabs.className = 'stats-work-tabs';
   tabs.setAttribute('role', 'tablist');
@@ -60,15 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <article class="stat-card"><span>THIS YEAR</span><strong>NT$ ${work.year}</strong><small>今年花費</small></article>`;
     chartArea.style.display = 'grid';
     chartArea.innerHTML = `
-      <section class="panel"><div class="panel-heading"><div><span class="panel-label">CHARACTERS</span><h3>${work.name} · 角色排行</h3></div><i class="fa-solid fa-ranking-star"></i></div>
-      <ol class="ranking stats-ranking">${work.characters.map((x, i) => `<li><span>0${i + 1}</span><strong>${x[0]}</strong><b>${x[1]}</b></li>`).join('')}</ol></section>
-      <section class="panel category-panel"><div class="panel-heading"><div><span class="panel-label">CATEGORY</span><h3>類型分布</h3></div><i class="fa-solid fa-chart-pie"></i></div>
-      <div class="category-chart"><div class="category-pie work-stat-pie" role="img" aria-label="${work.name} 類型分布"></div><div class="category-legend">${work.categories.map((x, i) => `<div><i class="legend-dot stat-cat-${i}"></i><span>${x[0]}</span><b>${x[1]}</b></div>`).join('')}</div></div></section>`;
-    const total = work.categories.reduce((sum, x) => sum + x[1], 0);
-    let angle = 0;
-    const colors = ['var(--accent)', '#6f8fdc', '#8da7d7', '#b9c7dc'];
-    const stops = work.categories.map((x, i) => { const next = angle + x[1] / total * 360; const value = `${colors[i]} ${angle}deg ${next}deg`; angle = next; return value; });
-    chartArea.querySelector('.work-stat-pie').style.background = `conic-gradient(${stops.join(', ')})`;
+      <section class="panel"><div class="panel-heading"><div><span class="panel-label">CHARACTERS</span><h3>${work.name} · 角色排行</h3></div><i class="fa-solid fa-ranking-star"></i></div><ol class="ranking stats-ranking">${work.characters.map((x, i) => `<li><span>0${i + 1}</span><strong>${x[0]}</strong><b>${x[1]}</b></li>`).join('')}</ol></section>
+      <section class="panel category-panel"><div class="panel-heading"><div><span class="panel-label">CATEGORY</span><h3>類型分布</h3></div><i class="fa-solid fa-chart-pie"></i></div><div class="category-chart"><div class="category-pie work-stat-pie" role="img" aria-label="${work.name} 類型分布"></div><div class="category-legend">${work.categories.map((x, i) => `<div><i class="legend-dot stat-cat-${i}"></i><span>${x[0]}</span><b>${x[1]}</b></div>`).join('')}</div></div></section>`;
+    renderPie(chartArea.querySelector('.work-stat-pie'), work.categories, `${work.name} 類型分布`, ['var(--accent)', '#6f8fdc', '#8da7d7', '#b9c7dc']);
   };
 
   tabs.querySelectorAll('.stats-work-tab').forEach((tab) => tab.addEventListener('click', () => {
@@ -79,9 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const index = Number(tab.dataset.workIndex);
     if (index >= 0) renderWork(works[index]);
-    else location.reload();
+    else renderAll();
   }));
 
-  const categoryPie = statistics.querySelector('.category-pie');
-  if (categoryPie) categoryPie.setAttribute('role', 'img');
+  renderAll();
 });
