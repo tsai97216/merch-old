@@ -1,4 +1,4 @@
-import { getVersion, setVersion } from './version.js?v=2.16.5';
+import { getVersion, setVersion } from './version.js?v=2.17.5';
 
 const API_BASE = 'https://chi-merch-api.tsai97216.workers.dev';
 const REPO_OWNER = 'tsai97216';
@@ -72,6 +72,13 @@ async function readWorkFile(workId) {
   return readFile(work.data);
 }
 
+async function loadRemoteVersion() {
+  const file = await readFile(VERSION_PATH);
+  const version = String(file.data?.version || '').replace(/^v/, '');
+  if (/^\d+\.\d+\.\d+$/.test(version)) setVersion(`v${version}`);
+  return getVersion();
+}
+
 function cleanItem(item) {
   return {
     id: item.id, images: Array.isArray(item.images) ? item.images : [], workId: item.workId, title: item.title,
@@ -125,6 +132,7 @@ export const github = {
     adminSecret = '';
     window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: false } }));
   },
+  async loadVersion() { return loadRemoteVersion(); },
   async readAllWorks() {
     const index = await readFile(WORK_INDEX_PATH);
     const works = await Promise.all(index.data.works.map(async (work) => ({ ...work, file: await readFile(work.data) })));
