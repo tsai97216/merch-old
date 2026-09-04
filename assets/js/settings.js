@@ -1,5 +1,5 @@
-import { github } from './github.js?v=2.16.5';
-import { getVersion } from './version.js?v=2.16.5';
+import { github } from './github.js?v=2.17.5';
+import { getVersion } from './version.js?v=2.17.5';
 
 export function createSettings({ settings }) {
   if (!settings) return;
