@@ -4,15 +4,11 @@ const SHIPPING_OPTIONS = [['', '未設定'], ['宅配', '宅配'], ['超商取�
 
 const value = (form, name) => form.elements[name]?.value?.trim() || '';
 const money = (number) => `NT$ ${Number(number || 0).toLocaleString('zh-TW')}`;
-
 function blankItem(workId) {
   const now = new Date().toISOString();
-  return { id: '', title: '', series: '', characters: [], category: '', manufacturer: '', description: '', status: 'pending', images: [],
-    purchase: { price: 0, currency: 'TWD', platform: '', date: '', url: '', orderId: '' },
-    release: { date: '', expectedDate: '', receivedDate: '' }, shipping: { status: '', method: '', trackingNumber: '', note: '' },
-    afterSales: { status: 'none', note: '', updatedAt: '' }, notes: '', createdAt: now, updatedAt: now, workId };
+  return { id: '', title: '', series: '', characters: [], category: '', manufacturer: '', description: '', status: 'pending', images: [], purchase: { price: 0, currency: 'TWD', platform: '', date: '', url: '', orderId: '' }, release: { date: '', expectedDate: '', receivedDate: '' }, shipping: { status: '', method: '', trackingNumber: '', note: '' }, afterSales: { status: 'none', note: '', updatedAt: '' }, notes: '', createdAt: now, updatedAt: now, workId };
 }
-function escapeHtml(text) { return String(text ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char])); }
+function escapeHtml(text) { return String(text ?? '').replace(/[&<>\"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;' }[char])); }
 
 export function createManagement({ management, store }) {
   if (!management || !store) return;
@@ -25,18 +21,27 @@ export function createManagement({ management, store }) {
       <label>狀態<select name="status">${STATUS_OPTIONS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select></label><label>價格 <span class="field-hint">TWD</span><input name="price" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></label><label>購買平台<input name="platform" placeholder="官方商城、蝦皮、淘寶…"></label><label>購買日期<input name="purchaseDate" type="date"></label><label>發售日期<input name="releaseDate" type="date"></label><label>預計到貨<input name="expectedDate" type="date"></label><label>收到日期<input name="receivedDate" type="date"></label>
       <label>物流方式<select name="shippingMethod">${SHIPPING_OPTIONS.map(([v, l]) => `<option value="${escapeHtml(v)}">${l}</option>`).join('')}</select></label><label>物流單號<input name="trackingNumber" placeholder="選填"></label><label>售後狀態<select name="afterSalesStatus">${AFTER_SALES_OPTIONS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select></label>
       <label class="full">商品描述<textarea name="description" placeholder="商品相關說明…"></textarea></label><label class="full">物流備註<textarea name="shippingNote" placeholder="物流或到貨補充…"></textarea></label><label class="full">售後備註<textarea name="afterSalesNote" placeholder="售後處理紀錄…"></textarea></label><label class="full">備註<textarea name="notes" placeholder="其他補充說明…"></textarea></label>
-    </div><div class="form-actions"><span class="form-message" data-form-message></span><button class="button primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> 儲存資料</button></div></form></section></div>
-    <div class="notice management-persistence"><i class="fa-solid fa-circle-info"></i><span>目前修改只存在本次頁面工作階段，尚未寫回 GitHub。完成本地 CRUD 後再接入 GitHub API。</span></div>`;
+    </div><div class="form-actions"><span class="form-message" data-form-message></span><button class="button primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> 儲存資料</button></div></form>
+    <section class="image-manager" data-image-manager><div class="panel-heading"><div><span class="panel-label">IMAGES</span><h3>圖片</h3></div><span class="muted" data-image-count>0 IMAGES</span></div><div class="image-manager-tools"><label class="button" data-image-upload-label><i class="fa-solid fa-image"></i> 新增圖片<input type="file" data-image-upload accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden></label><span class="field-hint">JPG、PNG、WebP、GIF</span></div><div class="image-manager-grid" data-image-grid></div><p class="image-manager-empty" data-image-empty>尚未加入圖片。</p></section></section></div>
+    <div class="notice management-persistence"><i class="fa-solid fa-circle-info"></i><span>目前未連線 GitHub。修改只存在本次工作階段，請先到「設定」連線。</span></div>`;
 
   const form = management.querySelector('[data-item-form]'), list = management.querySelector('[data-management-list]'), count = management.querySelector('[data-item-count]');
   const formTitle = management.querySelector('[data-form-title]'), deleteButton = management.querySelector('[data-delete]'), status = management.querySelector('[data-management-status]'), message = management.querySelector('[data-form-message]'), newButton = management.querySelector('[data-new-item]');
+  const imageGrid = management.querySelector('[data-image-grid]'), imageCount = management.querySelector('[data-image-count]'), imageEmpty = management.querySelector('[data-image-empty]');
   let editingId = null;
   const setMessage = (text, kind = '') => { message.textContent = text; message.dataset.kind = kind; };
   function populateWorks(selected) { const select = form.elements.workId; select.innerHTML = store.works.map((work) => `<option value="${work.id}">${escapeHtml(work.name)}</option>`).join(''); if (selected) select.value = selected; }
+  function renderImages(item) {
+    const images = Array.isArray(item?.images) ? item.images : [];
+    imageCount.textContent = `${images.length} IMAGE${images.length === 1 ? '' : 'S'}`;
+    imageEmpty.hidden = images.length > 0;
+    imageGrid.innerHTML = images.map((image, index) => `<article class="image-manager-card"><div class="image-manager-preview"><img src="${escapeHtml(image.url || image.path || '')}" alt="${escapeHtml(image.alt || item.title || '收藏圖片')}">${image.isCover ? '<span class="image-cover-badge">封面</span>' : ''}</div><div class="image-manager-card-actions"><button type="button" class="button small ${image.isCover ? 'is-active' : ''}" data-image-cover="${escapeHtml(image.id || String(index))}"><i class="fa-solid fa-star"></i> ${image.isCover ? '封面' : '設為封面'}</button><button type="button" class="button small danger" data-image-delete="${escapeHtml(image.id || String(index))}"><i class="fa-solid fa-trash"></i></button></div></article>`).join('');
+  }
   function fill(item) {
     populateWorks(item.workId);
     const fields = { title: item.title, series: item.series, characters: (item.characters || []).join('、'), category: item.category, manufacturer: item.manufacturer, status: item.status || 'pending', price: item.purchase?.price ?? 0, platform: item.purchase?.platform, purchaseDate: item.purchase?.date, releaseDate: item.release?.date, expectedDate: item.release?.expectedDate, receivedDate: item.release?.receivedDate, shippingMethod: item.shipping?.method, trackingNumber: item.shipping?.trackingNumber, afterSalesStatus: item.afterSales?.status || 'none', description: item.description, shippingNote: item.shipping?.note, afterSalesNote: item.afterSales?.note, notes: item.notes };
     Object.entries(fields).forEach(([name, fieldValue]) => { if (form.elements[name]) form.elements[name].value = fieldValue ?? ''; });
+    renderImages(item);
   }
   function startNew() { editingId = null; formTitle.textContent = '新增收藏'; deleteButton.hidden = true; fill(blankItem(store.works[0]?.id || '')); setMessage(''); status.textContent = '準備新增收藏'; form.elements.title.focus(); renderList(); }
   function edit(item) { if (!item) return; editingId = item.id; formTitle.textContent = '編輯收藏'; deleteButton.hidden = false; fill(item); setMessage(''); status.textContent = `正在編輯：${item.title}`; renderList(); }
@@ -55,12 +60,12 @@ export function createManagement({ management, store }) {
   form.addEventListener('submit', (event) => {
     event.preventDefault(); const errors = validate(); if (errors.length) { setMessage(errors[0], 'error'); return; }
     const existing = editingId ? store.getItem(editingId) : null, now = new Date().toISOString(), workId = value(form, 'workId');
-    const next = { ...(existing || blankItem(workId)), id: existing?.id || `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, workId, title: value(form, 'title'), series: value(form, 'series'), characters: value(form, 'characters').split(/[、,，]/).map((item) => item.trim()).filter(Boolean), category: value(form, 'category'), manufacturer: value(form, 'manufacturer'), status: value(form, 'status'), description: value(form, 'description'), notes: value(form, 'notes'),
-      purchase: { ...(existing?.purchase || {}), price: Number(value(form, 'price')) || 0, currency: 'TWD', platform: value(form, 'platform'), date: value(form, 'purchaseDate'), url: existing?.purchase?.url || '', orderId: existing?.purchase?.orderId || '' },
-      release: { ...(existing?.release || {}), date: value(form, 'releaseDate'), expectedDate: value(form, 'expectedDate'), receivedDate: value(form, 'receivedDate') }, shipping: { ...(existing?.shipping || {}), status: value(form, 'status') === 'received' ? 'received' : 'pending', method: value(form, 'shippingMethod'), trackingNumber: value(form, 'trackingNumber'), note: value(form, 'shippingNote') }, afterSales: { ...(existing?.afterSales || {}), status: value(form, 'afterSalesStatus'), note: value(form, 'afterSalesNote'), updatedAt: now }, createdAt: existing?.createdAt || now, updatedAt: now };
+    const next = { ...(existing || blankItem(workId)), id: existing?.id || `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, workId, title: value(form, 'title'), series: value(form, 'series'), characters: value(form, 'characters').split(/[、,，]/).map((item) => item.trim()).filter(Boolean), category: value(form, 'category'), manufacturer: value(form, 'manufacturer'), status: value(form, 'status'), description: value(form, 'description'), notes: value(form, 'notes'), purchase: { ...(existing?.purchase || {}), price: Number(value(form, 'price')) || 0, currency: 'TWD', platform: value(form, 'platform'), date: value(form, 'purchaseDate'), url: existing?.purchase?.url || '', orderId: existing?.purchase?.orderId || '' }, release: { ...(existing?.release || {}), date: value(form, 'releaseDate'), expectedDate: value(form, 'expectedDate'), receivedDate: value(form, 'receivedDate') }, shipping: { ...(existing?.shipping || {}), status: value(form, 'status') === 'received' ? 'received' : 'pending', method: value(form, 'shippingMethod'), trackingNumber: value(form, 'trackingNumber'), note: value(form, 'shippingNote') }, afterSales: { ...(existing?.afterSales || {}), status: value(form, 'afterSalesStatus'), note: value(form, 'afterSalesNote'), updatedAt: now }, createdAt: existing?.createdAt || now, updatedAt: now };
     if (existing) store.updateItem(editingId, next); else { store.addItem(next); editingId = next.id; }
-    formTitle.textContent = '編輯收藏'; deleteButton.hidden = false; setMessage('已更新本次工作階段資料。', 'success'); status.textContent = `已儲存：${next.title}`; renderList();
+    formTitle.textContent = '編輯收藏'; deleteButton.hidden = false; setMessage('已更新本次工作階段資料。', 'success'); status.textContent = `已儲存：${next.title}`; renderImages(next); renderList();
   });
   deleteButton.addEventListener('click', () => { if (!editingId) return; const item = store.getItem(editingId); if (!item || !window.confirm(`確定要刪除「${item.title}」嗎？`)) return; store.removeItem(editingId); editingId = null; setMessage('已刪除本次工作階段資料。', 'success'); status.textContent = '收藏已刪除'; startNew(); });
-  newButton.addEventListener('click', startNew); store.subscribe(() => renderList()); startNew();
+  newButton.addEventListener('click', startNew);
+  store.subscribe(() => { renderList(); if (editingId) renderImages(store.getItem(editingId)); });
+  startNew();
 }
