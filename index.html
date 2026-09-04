@@ -7,8 +7,8 @@
   <meta name="description" content="Chi 的動漫與遊戲周邊收藏資料庫">
   <title>Chi MERCH</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="assets/css/style.css?v=1.6.0">
-  <link rel="stylesheet" href="assets/css/pages.css?v=1.6.0">
+  <link rel="stylesheet" href="assets/css/style.css?v=1.7.0">
+  <link rel="stylesheet" href="assets/css/pages.css?v=1.7.0">
 </head>
 <body>
   <div class="site-shell">
@@ -21,7 +21,7 @@
         <a class="nav-item nav-management" href="#management"><i class="fa-solid fa-pen-to-square"></i><span>管理</span></a>
         <a class="nav-item nav-settings" href="#settings"><i class="fa-solid fa-gear"></i><span>設定</span></a>
       </nav>
-      <div class="sidebar-footer"><span>MERCH DATABASE</span><span>v1.6.0</span></div>
+      <div class="sidebar-footer"><span>MERCH DATABASE</span><span>v1.7.0</span></div>
     </aside>
 
     <main class="main">
@@ -83,14 +83,37 @@
           </div>
         </section>
 
-        <section id="statistics" class="page"><div class="page-heading"><div><span class="eyebrow">03 / STATISTICS</span><h2>統計</h2><p>收藏數量、花費與時間趨勢。</p></div></div><div class="stat-grid"><article class="stat-card"><span>COLLECTION</span><strong>128</strong><small>已收到</small></article><article class="stat-card"><span>PENDING</span><strong>24</strong><small>尚未收到</small></article><article class="stat-card"><span>SPENDING</span><strong>86,420</strong><small>TWD</small></article><article class="stat-card"><span>AVERAGE</span><strong>676</strong><small>每件平均</small></article></div><div class="two-column"><section class="panel"><div class="panel-heading"><div><span class="panel-label">MONTHLY</span><h3>每月新增</h3></div><span class="muted">2026</span></div><div class="chart-placeholder"><i style="height:35%"></i><i style="height:48%"></i><i style="height:42%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:76%"></i><i style="height:68%"></i><i style="height:88%"></i><i style="height:72%"></i><i style="height:92%"></i><i style="height:82%"></i><i style="height:66%"></i></div><div class="chart-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div></section><section class="panel"><div class="panel-heading"><div><span class="panel-label">CATEGORY</span><h3>類型分布</h3></div><i class="fa-solid fa-chart-pie"></i></div><div class="bars"><div class="bar-row"><div><span>模型</span><b>46</b></div><i style="width:86%"></i></div><div class="bar-row"><div><span>壓克力</span><b>31</b></div><i style="width:58%"></i></div><div class="bar-row"><div><span>徽章</span><b>24</b></div><i style="width:45%"></i></div><div class="bar-row"><div><span>其他</span><b>27</b></div><i style="width:51%"></i></div></div></section></div></section>
+        <section id="statistics" class="page">
+          <div class="page-heading"><div><span class="eyebrow">03 / STATISTICS</span><h2>統計</h2><p>收藏數量、花費與時間趨勢。</p></div></div>
+          <div class="stat-grid">
+            <article class="stat-card"><span>COLLECTION</span><strong>128</strong><small>已收到</small></article>
+            <article class="stat-card"><span>PENDING</span><strong>24</strong><small>尚未收到</small></article>
+            <article class="stat-card"><span>SPENDING</span><strong>86,420</strong><small>TWD</small></article>
+            <article class="stat-card"><span>AVERAGE</span><strong>676</strong><small>每件平均</small></article>
+          </div>
+          <div class="two-column">
+            <section class="panel"><div class="panel-heading"><div><span class="panel-label">MONTHLY</span><h3>每月新增</h3></div><span class="muted">2026</span></div><div class="chart-placeholder"><i style="height:35%"></i><i style="height:48%"></i><i style="height:42%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:76%"></i><i style="height:68%"></i><i style="height:88%"></i><i style="height:72%"></i><i style="height:92%"></i><i style="height:82%"></i><i style="height:66%"></i></div><div class="chart-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div></section>
+            <section class="panel category-panel">
+              <div class="panel-heading"><div><span class="panel-label">CATEGORY</span><h3>類型分布</h3></div><i class="fa-solid fa-chart-pie"></i></div>
+              <div class="category-chart">
+                <div class="category-pie" aria-label="類型分布圓餅圖"></div>
+                <div class="category-legend" aria-label="類型分布圖例">
+                  <div><i class="legend-dot model"></i><span>模型</span><b>46</b></div>
+                  <div><i class="legend-dot acrylic"></i><span>壓克力</span><b>31</b></div>
+                  <div><i class="legend-dot badge"></i><span>徽章</span><b>24</b></div>
+                  <div><i class="legend-dot other"></i><span>其他</span><b>27</b></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
 
         <section id="management" class="page"><div class="page-heading"><div><span class="eyebrow">04 / MANAGEMENT</span><h2>管理</h2><p>新增、編輯與整理收藏資料。</p></div><button class="button primary" type="button">＋ 新增收藏</button></div><div class="notice"><i class="fa-solid fa-circle-info"></i><span>目前為純視覺樣板。資料操作功能尚未接入。</span></div><section class="panel"><div class="panel-heading"><div><span class="panel-label">ITEM FORM</span><h3>收藏資料</h3></div></div><div class="form-grid"><label>標題<input placeholder="收藏名稱" disabled></label><label>作品<input placeholder="作品／系列" disabled></label><label>角色<input placeholder="角色，可多個" disabled></label><label>類型<select disabled><option>選擇類型</option></select></label><label>狀態<select disabled><option>選擇狀態</option></select></label><label>價格<input placeholder="TWD 0" disabled></label><label>購買平台<input placeholder="購買平台" disabled></label><label>購買日期<input placeholder="YYYY-MM-DD" disabled></label><label class="full">備註<textarea placeholder="補充說明…" disabled></textarea></label></div></section></section>
 
-        <section id="settings" class="page"><div class="page-heading"><div><span class="eyebrow">05 / SETTINGS</span><h2>設定</h2><p>資料來源、同步與顯示偏好。</p></div></div><div class="two-column"><section class="panel"><div class="panel-heading"><div><span class="panel-label">DATA SOURCE</span><h3>GitHub</h3></div><span class="tag">未連線</span></div><dl class="settings-list"><div><dt>Repository</dt><dd>tsai97216/merch</dd></div><div><dt>Branch</dt><dd>main</dd></div><div><dt>資料路徑</dt><dd>data/merch.json</dd></div><div><dt>圖片路徑</dt><dd>images/</dd></div></dl></section><section class="panel"><div class="panel-heading"><div><span class="panel-label">DISPLAY</span><h3>顯示設定</h3></div></div><dl class="settings-list"><div><dt>主題</dt><dd>跟隨系統</dd></div><div><dt>收藏檢視</dt><dd>卡片／清單</dd></div><div><dt>貨幣</dt><dd>TWD</dd></div><div><dt>版本</dt><dd>v1.6.0</dd></div></dl></section></div></section>
+        <section id="settings" class="page"><div class="page-heading"><div><span class="eyebrow">05 / SETTINGS</span><h2>設定</h2><p>資料來源、同步與顯示偏好。</p></div></div><div class="two-column"><section class="panel"><div class="panel-heading"><div><span class="panel-label">DATA SOURCE</span><h3>GitHub</h3></div><span class="tag">未連線</span></div><dl class="settings-list"><div><dt>Repository</dt><dd>tsai97216/merch</dd></div><div><dt>Branch</dt><dd>main</dd></div><div><dt>資料路徑</dt><dd>data/merch.json</dd></div><div><dt>圖片路徑</dt><dd>images/</dd></div></dl></section><section class="panel"><div class="panel-heading"><div><span class="panel-label">DISPLAY</span><h3>顯示設定</h3></div></div><dl class="settings-list"><div><dt>主題</dt><dd>跟隨系統</dd></div><div><dt>收藏檢視</dt><dd>卡片／清單</dd></div><div><dt>貨幣</dt><dd>TWD</dd></div><div><dt>版本</dt><dd>v1.7.0</dd></div></dl></section></div></section>
       </div>
 
-      <footer class="footer"><span>Chi MERCH</span><span>Personal Collection Database</span><span>v1.6.0</span></footer>
+      <footer class="footer"><span>Chi MERCH</span><span>Personal Collection Database</span><span>v1.7.0</span></footer>
     </main>
   </div>
   <script src="assets/js/collection-view.js"></script>
