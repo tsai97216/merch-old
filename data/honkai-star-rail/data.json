@@ -2,11 +2,20 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T05:38:48.119Z",
+  "updatedAt": "2026-09-04T09:21:30.733Z",
   "items": [
     {
       "id": "item-1788499886180-xm1w0h",
-      "images": [],
+      "images": [
+        {
+          "id": "image-1788513685897-ypvxat",
+          "path": "data/honkai-star-rail/images/item-1788499886180-xm1w0h/image-1788513685897-ypvxat.jpg",
+          "url": "https://raw.githubusercontent.com/tsai97216/merch/main/data/honkai-star-rail/images/item-1788499886180-xm1w0h/image-1788513685897-ypvxat.jpg",
+          "sha": "34fe984896a1baf9df56527a99b4e9121a95734e",
+          "alt": "流螢 春日手信 1/8比例手辦",
+          "isCover": true
+        }
+      ],
       "workId": "honkai-star-rail",
       "title": "流螢 春日手信 1/8比例手辦",
       "series": "",
@@ -43,7 +52,7 @@
         "updatedAt": "2026-09-04T05:31:26.180Z"
       },
       "createdAt": "2026-09-04T05:31:26.180Z",
-      "updatedAt": "2026-09-04T05:31:26.180Z"
+      "updatedAt": "2026-09-04T09:21:29.397Z"
     },
     {
       "id": "item-1788500327137-hn6eyk",
