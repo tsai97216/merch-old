@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "work": "zenless-zone-zero",
   "name": "絕區零",
-  "updatedAt": "2026-09-04T05:27:33.741Z",
+  "updatedAt": "2026-09-04T05:31:43.356Z",
   "items": [
     {
       "id": "item-1788499604827-8xrmwb",
@@ -21,7 +21,7 @@
       "purchase": {
         "price": 77,
         "currency": "TWD",
-        "platform": "",
+        "platform": "米哈遊淘寶",
         "date": "2026-09-03",
         "url": "",
         "orderId": ""
@@ -40,10 +40,10 @@
       "afterSales": {
         "status": "none",
         "note": "",
-        "updatedAt": "2026-09-04T05:27:33.273Z"
+        "updatedAt": "2026-09-04T05:31:42.946Z"
       },
       "createdAt": "2026-09-04T05:26:44.826Z",
-      "updatedAt": "2026-09-04T05:27:33.273Z"
+      "updatedAt": "2026-09-04T05:31:42.946Z"
     }
   ]
 }
