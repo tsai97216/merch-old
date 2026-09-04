@@ -41,6 +41,12 @@ function getActiveItem(management, store) {
 export function attachSyncBridge(management, store) {
   if (!management || !store) return;
 
+  const renderPersistence = () => {
+    const notice = management.querySelector('.management-persistence');
+    if (notice) notice.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${github.connected ? '已連線 GitHub。儲存、刪除與圖片管理會寫回 GitHub。' : '目前未連線 GitHub。修改只存在本次工作階段，請先到「設定」連線。'}</span>`;
+  };
+  renderPersistence();
+
   management.addEventListener('submit', async (event) => {
     if (!github.connected) return;
     const form = event.target;
@@ -138,8 +144,5 @@ export function attachSyncBridge(management, store) {
     finally { input.disabled = false; input.value = ''; }
   }, true);
 
-  window.addEventListener('chi-merch:github', () => {
-    const notice = management.querySelector('.management-persistence');
-    if (notice) notice.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${github.connected ? '已連線 GitHub。儲存、刪除與圖片管理會寫回 GitHub。' : '目前未連線 GitHub。修改只存在本次工作階段，請先到「設定」連線。'}</span>`;
-  });
+  window.addEventListener('chi-merch:github', renderPersistence);
 }
