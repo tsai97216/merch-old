@@ -44,6 +44,7 @@ function githubHeaders(env, jsonBody = false) {
     Accept: 'application/vnd.github+json',
     Authorization: `Bearer ${env.GITHUB_TOKEN}`,
     'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'tsai97216-merch',
     ...(jsonBody ? { 'Content-Type': 'application/json' } : {})
   };
 }
@@ -65,9 +66,6 @@ async function githubRequest(request, env, path) {
 
 export default {
   async fetch(request, env) {
-    const origin = request.headers.get('Origin');
-    if (origin && origin !== ALLOWED_ORIGIN) return json({ error: '不允許的來源。' }, 403);
-
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
