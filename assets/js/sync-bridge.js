@@ -1,4 +1,4 @@
-import { github } from './github.js?v=2.16.5';
+import { github } from './github.js?v=2.17.5';
 
 const value = (form, name) => form.elements[name]?.value?.trim() || '';
 const setStatus = (management, text, kind = '') => {
@@ -7,7 +7,32 @@ const setStatus = (management, text, kind = '') => {
   if (status) status.textContent = text;
   if (message) { message.textContent = text; message.dataset.kind = kind; }
 };
-const showSuccess = (message) => window.alert(message);
+const showSuccess = (message) => {
+  let toast = document.querySelector('[data-sync-toast]');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.dataset.syncToast = '';
+    Object.assign(toast.style, {
+      position: 'fixed', right: '24px', bottom: '24px', zIndex: '9999',
+      maxWidth: 'min(420px, calc(100vw - 32px))', padding: '14px 18px',
+      borderRadius: '12px', background: '#1f2937', color: '#fff',
+      boxShadow: '0 12px 32px rgba(0,0,0,.22)', fontSize: '14px',
+      lineHeight: '1.5', whiteSpace: 'pre-line', opacity: '0',
+      transform: 'translateY(8px)', transition: 'opacity .18s ease, transform .18s ease'
+    });
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  clearTimeout(showSuccess.timer);
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+  });
+  showSuccess.timer = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+  }, 2600);
+};
 
 function buildItem(form, old) {
   const now = new Date().toISOString();
