@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const VERSION = 'v2.0.0';
+  const VERSION = 'v2.1.0';
   document.querySelectorAll('.sidebar-footer span:last-child, #settings dd, .footer span:last-child').forEach((element) => {
     if (/^v\d+\.\d+\.\d+$/.test(element.textContent.trim())) element.textContent = VERSION;
   });
@@ -10,9 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       link.href = url.href;
     }
   });
-  try {
-    await import('./app.js?v=2.0.0');
-  } catch (error) {
-    console.error('[Chi MERCH] application bootstrap failed', error);
-  }
+  try { await import('./app.js?v=2.1.0'); }
+  catch (error) { console.error('[Chi MERCH] application bootstrap failed', error); }
 });
