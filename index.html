@@ -7,45 +7,144 @@
   <meta name="description" content="Chi 的動漫與遊戲周邊收藏資料庫">
   <title>Chi MERCH</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="assets/css/design-system.css">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=1.3.0">
 </head>
 <body>
-  <aside class="sidebar">
-    <a class="brand" href="#page-home" aria-label="Chi MERCH 首頁"><span class="brand-mark">CM</span><span><strong>Chi MERCH</strong><small>Personal Collection</small></span></a>
-    <nav class="nav-menu" aria-label="主要導覽">
-      <a class="nav-item active" href="#page-home"><i class="fa-solid fa-house"></i><span>首頁</span></a>
-      <a class="nav-item" href="#page-collection"><i class="fa-solid fa-box-archive"></i><span>收藏</span></a>
-      <a class="nav-item" href="#page-stats"><i class="fa-solid fa-chart-simple"></i><span>統計</span></a>
-      <a class="nav-item" href="#page-manage"><i class="fa-solid fa-pen-to-square"></i><span>管理</span></a>
-      <a class="nav-item" href="#page-settings"><i class="fa-solid fa-gear"></i><span>設定</span></a>
-    </nav>
-    <div class="sidebar-foot"><span>MERCH DATABASE</span><span>v1.3.0</span></div>
-  </aside>
+  <div class="site-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">CM</div>
+        <div class="brand-copy">
+          <strong>Chi MERCH</strong>
+          <span>Personal Collection</span>
+        </div>
+      </div>
 
-  <main>
-    <header class="topbar">
-      <div class="page-intro"><span class="eyebrow">CHI MERCH</span><h1>動漫與遊戲周邊收藏</h1><p>整理、瀏覽與管理你的個人收藏。</p></div>
-      <div class="search-box search-placeholder"><i class="fa-solid fa-magnifying-glass"></i><span>搜尋收藏…</span></div>
-    </header>
+      <nav class="nav" aria-label="主要導覽">
+        <a class="nav-item active" href="#home"><i class="fa-solid fa-house"></i><span>首頁</span></a>
+        <a class="nav-item" href="#collection"><i class="fa-solid fa-box-archive"></i><span>收藏</span></a>
+        <a class="nav-item" href="#statistics"><i class="fa-solid fa-chart-simple"></i><span>統計</span></a>
+        <a class="nav-item" href="#management"><i class="fa-solid fa-pen-to-square"></i><span>管理</span></a>
+        <a class="nav-item" href="#settings"><i class="fa-solid fa-gear"></i><span>設定</span></a>
+      </nav>
 
-    <section id="page-home" class="page page-home">
-      <div class="hero"><div><span class="eyebrow">01 / HOME</span><h2>我的收藏<br>Collection.</h2></div><p>收藏資料庫的總覽入口。<br>目前先建立完整視覺樣板，資料與互動功能稍後再接。</p></div>
-      <div class="stats-grid"><article class="stat"><span class="stat-label">TOTAL COLLECTION</span><strong class="stat-value">128</strong><span class="stat-note">已收到的收藏</span></article><article class="stat"><span class="stat-label">PENDING ARRIVAL</span><strong class="stat-value">24</strong><span class="stat-note">尚未收到</span></article><article class="stat"><span class="stat-label">PREORDER</span><strong class="stat-value">12</strong><span class="stat-note">預購中的收藏</span></article><article class="stat"><span class="stat-label">TOTAL SPENDING</span><strong class="stat-value">NT$ 86,420</strong><span class="stat-note">樣板資料</span></article></div>
-      <div class="dashboard-grid"><section class="panel"><div class="section-header"><h3>作品分布</h3><span class="muted-label">BY WORK</span></div><div class="bar-list"><div><span>崩壞：星穹鐵道</span><b>42</b></div><i style="width:78%"></i><div><span>絕區零</span><b>31</b></div><i style="width:58%"></i><div><span>原神</span><b>25</b></div><i style="width:47%"></i><div><span>鳴潮</span><b>18</b></div><i style="width:34%"></i></div></section><section class="panel"><div class="section-header"><h3>角色排行</h3><span class="muted-label">CHARACTERS</span></div><ol class="ranking"><li><span>流螢</span><b>16</b></li><li><span>銀狼</span><b>12</b></li><li><span>昔漣</span><b>10</b></li><li><span>遐蝶</span><b>8</b></li></ol></section></div>
-      <section class="section"><div class="section-header"><h3>最近收藏</h3><a class="link" href="#page-collection">查看全部 <i class="fa-solid fa-arrow-right"></i></a></div><div class="content-grid cards"><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>示範收藏 A</strong><span>崩壞：星穹鐵道 · 流螢</span><div><em>模型</em><b>NT$ 2,480</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>示範收藏 B</strong><span>絕區零 · 妮可</span><div><em>周邊</em><b>NT$ 680</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>示範收藏 C</strong><span>鳴潮 · 今汐</span><div><em>徽章</em><b>NT$ 320</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>示範收藏 D</strong><span>原神 · 芙寧娜</span><div><em>立牌</em><b>NT$ 450</b></div></article></div></section>
-    </section>
+      <div class="sidebar-footer">
+        <span>MERCH DATABASE</span>
+        <span>v1.3.0</span>
+      </div>
+    </aside>
 
-    <section id="page-collection" class="page page-collection"><div class="page-head"><div><span class="eyebrow">02 / COLLECTION</span><h2>收藏</h2><p>收藏瀏覽介面樣板。</p></div></div><div class="collection-toolbar"><div class="field fake-field"><i class="fa-solid fa-magnifying-glass"></i><span>搜尋標題、作品、角色、備註…</span></div><div class="select">作品 <i class="fa-solid fa-chevron-down"></i></div><div class="select">角色 <i class="fa-solid fa-chevron-down"></i></div><div class="select">類型 <i class="fa-solid fa-chevron-down"></i></div></div><div class="collection-bar"><span class="muted-label">128 ITEMS</span><div class="select sort">排序：建立時間 <i class="fa-solid fa-chevron-down"></i></div></div><div class="content-grid cards six"><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>流螢 1/7 比例模型</strong><span>崩壞：星穹鐵道 · 流螢</span><div><em class="received">已收到</em><b>NT$ 3,200</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>銀狼系列周邊</strong><span>崩壞：星穹鐵道 · 銀狼</span><div><em>周邊</em><b>NT$ 980</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>妮可掛軸</strong><span>絕區零 · 妮可</span><div><em class="pending">預購</em><b>NT$ 1,280</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>今汐壓克力立牌</strong><span>鳴潮 · 今汐</span><div><em class="received">已收到</em><b>NT$ 450</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>芙寧娜徽章組</strong><span>原神 · 芙寧娜</span><div><em class="received">已收到</em><b>NT$ 320</b></div></article><article class="item-card"><div class="card-image placeholder"><span>IMAGE</span></div><strong>示範收藏 F</strong><span>作品 · 角色</span><div><em>待整理</em><b>NT$ 680</b></div></article></div></section>
+    <main class="main">
+      <header class="header">
+        <div class="header-copy">
+          <span class="eyebrow">CHI MERCH</span>
+          <h1>動漫與遊戲周邊收藏</h1>
+          <p>整理、瀏覽與管理你的個人收藏。</p>
+        </div>
+        <div class="search-placeholder">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>搜尋收藏…</span>
+        </div>
+      </header>
 
-    <section id="page-stats" class="page page-stats"><div class="page-head"><div><span class="eyebrow">03 / STATISTICS</span><h2>統計</h2><p>收藏數量、花費與時間趨勢的視覺樣板。</p></div></div><div class="stats-grid"><article class="stat"><span class="stat-label">COLLECTION</span><strong class="stat-value">128</strong><span class="stat-note">已收到</span></article><article class="stat"><span class="stat-label">PENDING</span><strong class="stat-value">24</strong><span class="stat-note">尚未收到</span></article><article class="stat"><span class="stat-label">SPENDING</span><strong class="stat-value">86,420</strong><span class="stat-note">TWD</span></article><article class="stat"><span class="stat-label">AVERAGE</span><strong class="stat-value">676</strong><span class="stat-note">每件平均</span></article></div><div class="dashboard-grid"><section class="panel chart-panel"><div class="section-header"><h3>每月新增</h3><span class="muted-label">2026</span></div><div class="fake-chart"><i style="height:32%"></i><i style="height:48%"></i><i style="height:38%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:76%"></i><i style="height:68%"></i><i style="height:88%"></i><i style="height:72%"></i><i style="height:92%"></i><i style="height:82%"></i><i style="height:66%"></i></div><div class="chart-labels"><span>1月</span><span>2月</span><span>3月</span><span>4月</span><span>5月</span><span>6月</span><span>7月</span><span>8月</span><span>9月</span><span>10月</span><span>11月</span><span>12月</span></div></section><section class="panel"><div class="section-header"><h3>類型分布</h3><span class="muted-label">CATEGORY</span></div><div class="bar-list"><div><span>模型</span><b>46</b></div><i style="width:86%"></i><div><span>壓克力</span><b>31</b></div><i style="width:58%"></i><div><span>徽章</span><b>24</b></div><i style="width:45%"></i><div><span>其他</span><b>27</b></div><i style="width:51%"></i></div></section></div></section>
+      <div class="content">
+        <section id="home" class="page">
+          <div class="hero">
+            <div>
+              <span class="eyebrow">01 / HOME</span>
+              <h2>我的收藏<br><em>Collection.</em></h2>
+            </div>
+            <p>收藏資料庫的總覽入口。<br>這一階段先建立完整視覺樣板。</p>
+          </div>
 
-    <section id="page-manage" class="page page-manage"><div class="page-head"><div><span class="eyebrow">04 / MANAGEMENT</span><h2>管理</h2><p>收藏資料管理介面樣板。</p></div><button class="button primary" disabled><i class="fa-solid fa-plus"></i> 新增收藏</button></div><div class="notice"><i class="fa-solid fa-circle-info"></i> 目前為純視覺樣板，按鈕與欄位尚未連接資料。</div><section class="panel form-preview"><div class="section-header"><h3>收藏資料</h3><span class="muted-label">ITEM FORM</span></div><div class="form-grid"><label>標題<input placeholder="收藏名稱" disabled></label><label>作品<input placeholder="作品／系列" disabled></label><label>角色<input placeholder="角色，可多個" disabled></label><label>類型<select disabled><option>選擇類型</option></select></label><label>狀態<select disabled><option>選擇狀態</option></select></label><label>價格<input placeholder="TWD 0" disabled></label><label>購買平台<input placeholder="購買平台" disabled></label><label>購買日期<input placeholder="YYYY-MM-DD" disabled></label><label class="full">備註<textarea placeholder="補充說明…" disabled></textarea></label></div></section><section class="section"><div class="section-header"><h3>現有資料</h3><span class="muted-label">ITEMS</span></div><div class="manage-list"><div class="manage-row"><div><strong>流螢 1/7 比例模型</strong><small>崩壞：星穹鐵道 · NT$ 3,200</small></div><div class="actions"><button class="button" disabled>編輯</button><button class="button danger" disabled>刪除</button></div></div><div class="manage-row"><div><strong>妮可掛軸</strong><small>絕區零 · NT$ 1,280 · 預購</small></div><div class="actions"><button class="button" disabled>編輯</button><button class="button danger" disabled>刪除</button></div></div></div></section></section>
+          <div class="stat-grid">
+            <article class="stat-card"><span>總收藏</span><strong>128</strong><small>已收到</small></article>
+            <article class="stat-card"><span>待到貨</span><strong>24</strong><small>尚未收到</small></article>
+            <article class="stat-card"><span>預購</span><strong>12</strong><small>預購中的收藏</small></article>
+            <article class="stat-card"><span>總花費</span><strong>NT$ 86,420</strong><small>目前資料預覽</small></article>
+          </div>
 
-    <section id="page-settings" class="page page-settings"><div class="page-head"><div><span class="eyebrow">05 / SETTINGS</span><h2>設定</h2><p>資料來源、同步與顯示偏好的樣板。</p></div></div><div class="settings-grid"><section class="panel"><div class="section-header"><h3>GitHub</h3><span class="badge">未連線</span></div><div class="setting-row"><span>Repository</span><strong>tsai97216/merch</strong></div><div class="setting-row"><span>Branch</span><strong>main</strong></div><div class="setting-row"><span>資料路徑</span><strong>data/merch.json</strong></div><div class="actions"><button class="button primary" disabled><i class="fa-brands fa-github"></i> 登入 GitHub</button><button class="button" disabled>手動同步</button></div></section><section class="panel"><div class="section-header"><h3>顯示</h3><span class="muted-label">DISPLAY</span></div><div class="setting-row"><span>主題</span><strong>跟隨系統</strong></div><div class="setting-row"><span>貨幣</span><strong>TWD</strong></div><div class="setting-row"><span>收藏檢視</span><strong>卡片</strong></div><div class="setting-row"><span>版本</span><strong>v1.3.0</strong></div></section></div></section>
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading"><div><span class="panel-label">BY WORK</span><h3>作品分布</h3></div><i class="fa-solid fa-layer-group"></i></div>
+              <div class="bars">
+                <div class="bar-row"><div><span>崩壞：星穹鐵道</span><b>42</b></div><i style="width:82%"></i></div>
+                <div class="bar-row"><div><span>絕區零</span><b>31</b></div><i style="width:61%"></i></div>
+                <div class="bar-row"><div><span>原神</span><b>25</b></div><i style="width:49%"></i></div>
+                <div class="bar-row"><div><span>鳴潮</span><b>18</b></div><i style="width:35%"></i></div>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading"><div><span class="panel-label">CHARACTERS</span><h3>角色排行</h3></div><i class="fa-solid fa-ranking-star"></i></div>
+              <ol class="ranking">
+                <li><span>01</span><strong>流螢</strong><b>16</b></li>
+                <li><span>02</span><strong>銀狼</strong><b>12</b></li>
+                <li><span>03</span><strong>昔漣</strong><b>10</b></li>
+                <li><span>04</span><strong>遐蝶</strong><b>8</b></li>
+              </ol>
+            </section>
+          </div>
 
-    <footer class="site-footer"><span>Chi MERCH · Personal Collection Database</span><span>v1.3.0</span></footer>
-  </main>
+          <section class="section">
+            <div class="section-heading"><div><span class="panel-label">RECENT</span><h3>最近收藏</h3></div><a href="#collection">查看全部 <i class="fa-solid fa-arrow-right"></i></a></div>
+            <div class="card-grid">
+              <article class="item-card"><div class="item-image">IMAGE</div><h4>流螢 1/7 比例模型</h4><p>崩壞：星穹鐵道 · 流螢</p><div class="item-bottom"><span class="tag received">已收到</span><b>NT$ 3,200</b></div></article>
+              <article class="item-card"><div class="item-image">IMAGE</div><h4>銀狼系列周邊</h4><p>崩壞：星穹鐵道 · 銀狼</p><div class="item-bottom"><span class="tag">周邊</span><b>NT$ 980</b></div></article>
+              <article class="item-card"><div class="item-image">IMAGE</div><h4>妮可掛軸</h4><p>絕區零 · 妮可</p><div class="item-bottom"><span class="tag pending">預購</span><b>NT$ 1,280</b></div></article>
+              <article class="item-card"><div class="item-image">IMAGE</div><h4>今汐壓克力立牌</h4><p>鳴潮 · 今汐</p><div class="item-bottom"><span class="tag received">已收到</span><b>NT$ 450</b></div></article>
+            </div>
+          </section>
+        </section>
+
+        <section id="collection" class="page">
+          <div class="page-heading"><div><span class="eyebrow">02 / COLLECTION</span><h2>收藏</h2><p>所有收藏項目的瀏覽介面。</p></div></div>
+          <div class="toolbar">
+            <div class="input-placeholder"><i class="fa-solid fa-magnifying-glass"></i><span>搜尋標題、作品、角色、備註…</span></div>
+            <div class="select-placeholder">作品 <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="select-placeholder">角色 <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="select-placeholder">類型 <i class="fa-solid fa-chevron-down"></i></div>
+          </div>
+          <div class="collection-meta"><span>128 ITEMS</span><div class="select-placeholder sort">排序：建立時間 <i class="fa-solid fa-chevron-down"></i></div></div>
+          <div class="card-grid collection-grid">
+            <article class="item-card"><div class="item-image">IMAGE</div><h4>流螢 1/7 比例模型</h4><p>崩壞：星穹鐵道 · 流螢</p><div class="item-bottom"><span class="tag received">已收到</span><b>NT$ 3,200</b></div></article>
+            <article class="item-card"><div class="item-image">IMAGE</div><h4>銀狼系列周邊</h4><p>崩壞：星穹鐵道 · 銀狼</p><div class="item-bottom"><span class="tag">周邊</span><b>NT$ 980</b></div></article>
+            <article class="item-card"><div class="item-image">IMAGE</div><h4>妮可掛軸</h4><p>絕區零 · 妮可</p><div class="item-bottom"><span class="tag pending">預購</span><b>NT$ 1,280</b></div></article>
+            <article class="item-card"><div class="item-image">IMAGE</div><h4>今汐壓克力立牌</h4><p>鳴潮 · 今汐</p><div class="item-bottom"><span class="tag received">已收到</span><b>NT$ 450</b></div></article>
+            <article class="item-card"><div class="item-image">IMAGE</div><h4>芙寧娜徽章組</h4><p>原神 · 芙寧娜</p><div class="item-bottom"><span class="tag received">已收到</span><b>NT$ 320</b></div></article>
+            <article class="item-card"><div class="item-image">IMAGE</div><h4>示範收藏</h4><p>作品 · 角色</p><div class="item-bottom"><span class="tag">待整理</span><b>NT$ 680</b></div></article>
+          </div>
+        </section>
+
+        <section id="statistics" class="page">
+          <div class="page-heading"><div><span class="eyebrow">03 / STATISTICS</span><h2>統計</h2><p>收藏數量、花費與時間趨勢。</p></div></div>
+          <div class="stat-grid"><article class="stat-card"><span>COLLECTION</span><strong>128</strong><small>已收到</small></article><article class="stat-card"><span>PENDING</span><strong>24</strong><small>尚未收到</small></article><article class="stat-card"><span>SPENDING</span><strong>86,420</strong><small>TWD</small></article><article class="stat-card"><span>AVERAGE</span><strong>676</strong><small>每件平均</small></article></div>
+          <div class="two-column">
+            <section class="panel"><div class="panel-heading"><div><span class="panel-label">MONTHLY</span><h3>每月新增</h3></div><span class="muted">2026</span></div><div class="chart-placeholder"><i style="height:35%"></i><i style="height:48%"></i><i style="height:42%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:76%"></i><i style="height:68%"></i><i style="height:88%"></i><i style="height:72%"></i><i style="height:92%"></i><i style="height:82%"></i><i style="height:66%"></i></div><div class="chart-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div></section>
+            <section class="panel"><div class="panel-heading"><div><span class="panel-label">CATEGORY</span><h3>類型分布</h3></div><i class="fa-solid fa-chart-pie"></i></div><div class="bars"><div class="bar-row"><div><span>模型</span><b>46</b></div><i style="width:86%"></i></div><div class="bar-row"><div><span>壓克力</span><b>31</b></div><i style="width:58%"></i></div><div class="bar-row"><div><span>徽章</span><b>24</b></div><i style="width:45%"></i></div><div class="bar-row"><div><span>其他</span><b>27</b></div><i style="width:51%"></i></div></div></section>
+          </div>
+        </section>
+
+        <section id="management" class="page">
+          <div class="page-heading"><div><span class="eyebrow">04 / MANAGEMENT</span><h2>管理</h2><p>新增、編輯與整理收藏資料。</p></div><button class="button primary" type="button">＋ 新增收藏</button></div>
+          <div class="notice"><i class="fa-solid fa-circle-info"></i><span>目前為純視覺樣板。資料操作功能尚未接入。</span></div>
+          <section class="panel"><div class="panel-heading"><div><span class="panel-label">ITEM FORM</span><h3>收藏資料</h3></div></div><div class="form-grid"><label>標題<input placeholder="收藏名稱" disabled></label><label>作品<input placeholder="作品／系列" disabled></label><label>角色<input placeholder="角色，可多個" disabled></label><label>類型<select disabled><option>選擇類型</option></select></label><label>狀態<select disabled><option>選擇狀態</option></select></label><label>價格<input placeholder="TWD 0" disabled></label><label>購買平台<input placeholder="購買平台" disabled></label><label>購買日期<input placeholder="YYYY-MM-DD" disabled></label><label class="full">備註<textarea placeholder="補充說明…" disabled></textarea></label></div></section>
+        </section>
+
+        <section id="settings" class="page">
+          <div class="page-heading"><div><span class="eyebrow">05 / SETTINGS</span><h2>設定</h2><p>資料來源、同步與顯示偏好。</p></div></div>
+          <div class="two-column">
+            <section class="panel"><div class="panel-heading"><div><span class="panel-label">DATA SOURCE</span><h3>GitHub</h3></div><span class="tag">未連線</span></div><dl class="settings-list"><div><dt>Repository</dt><dd>tsai97216/merch</dd></div><div><dt>Branch</dt><dd>main</dd></div><div><dt>資料路徑</dt><dd>data/merch.json</dd></div><div><dt>圖片路徑</dt><dd>images/</dd></div></dl></section>
+            <section class="panel"><div class="panel-heading"><div><span class="panel-label">DISPLAY</span><h3>顯示設定</h3></div></div><dl class="settings-list"><div><dt>主題</dt><dd>跟隨系統</dd></div><div><dt>收藏檢視</dt><dd>卡片</dd></div><div><dt>貨幣</dt><dd>TWD</dd></div><div><dt>版本</dt><dd>v1.3.0</dd></div></dl></section>
+          </div>
+        </section>
+      </div>
+
+      <footer class="footer">
+        <span>Chi MERCH</span>
+        <span>Personal Collection Database</span>
+        <span>v1.3.0</span>
+      </footer>
+    </main>
+  </div>
 </body>
 </html>
