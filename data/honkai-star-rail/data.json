@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T10:32:03.109Z",
+  "updatedAt": "2026-09-04T10:33:41.220Z",
   "items": [
     {
       "id": "item-1788499886180-xm1w0h",
@@ -104,15 +104,15 @@
       "characters": [
         "流螢"
       ],
-      "category": "",
-      "manufacturer": "",
+      "category": "壓克力",
+      "manufacturer": "米哈遊",
       "status": "pending",
       "description": "",
       "notes": "",
       "purchase": {
         "price": 0,
         "currency": "TWD",
-        "platform": "",
+        "platform": "米哈遊淘寶",
         "date": "",
         "url": "",
         "orderId": ""
@@ -124,17 +124,17 @@
       },
       "shipping": {
         "status": "pending",
-        "method": "",
+        "method": "集運",
         "trackingNumber": "",
         "note": ""
       },
       "afterSales": {
         "status": "none",
         "note": "",
-        "updatedAt": "2026-09-04T10:32:01.359Z"
+        "updatedAt": "2026-09-04T10:33:39.814Z"
       },
       "createdAt": "2026-09-04T10:32:01.359Z",
-      "updatedAt": "2026-09-04T10:32:01.359Z"
+      "updatedAt": "2026-09-04T10:33:39.814Z"
     }
   ]
 }
