@@ -1,12 +1,12 @@
-import { loadData } from './data.js?v=2.8.3';
-import { createItemDetail } from './item-detail.js?v=2.8.3';
-import { createDashboard } from './dashboard.js?v=2.8.3';
-import { createCollection } from './collection.js?v=2.8.3';
-import { createStatistics } from './statistics.js?v=2.8.3';
-import { createManagement } from './management.js?v=2.8.3';
-import { createSettings } from './settings.js?v=2.8.3';
-import { attachSyncBridge } from './sync-bridge.js?v=2.8.3';
-import { getVersion, setVersion } from './version.js?v=2.8.3';
+import { loadData } from './data.js?v=2.10.3';
+import { createItemDetail } from './item-detail.js?v=2.10.3';
+import { createDashboard } from './dashboard.js?v=2.10.3';
+import { createCollection } from './collection.js?v=2.10.3';
+import { createStatistics } from './statistics.js?v=2.10.3';
+import { createManagement } from './management.js?v=2.10.3';
+import { createSettings } from './settings.js?v=2.10.3';
+import { attachSyncBridge } from './sync-bridge.js?v=2.10.3';
+import { getVersion, setVersion } from './version.js?v=2.10.3';
 
 function updateVersion() {
   const version = getVersion();
