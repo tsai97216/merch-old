@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "2026-09-04T05:25:00.541Z",
+  "updatedAt": "2026-09-04T05:25:05.243Z",
   "items": [
     {
       "id": "hsr-firefly-17-scale",
@@ -37,11 +37,11 @@
       "afterSales": {
         "status": "",
         "note": "",
-        "updatedAt": "2026-09-04T05:24:59.840Z"
+        "updatedAt": "2026-09-04T05:25:04.117Z"
       },
-      "notes": "示範資料，之後替換為正式收藏資料。",
+      "notes": "",
       "createdAt": "2026-06-12",
-      "updatedAt": "2026-09-04T05:24:59.840Z",
+      "updatedAt": "2026-09-04T05:25:04.117Z",
       "workId": "honkai-star-rail",
       "series": ""
     }
