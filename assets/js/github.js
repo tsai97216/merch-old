@@ -1,24 +1,27 @@
 import { getVersion, setVersion } from './version.js';
 
-const SESSION_KEY = 'chi-merch-github-token';
+const API_BASE = 'https://api.merch.chi.qzz.io';
 const REPO_OWNER = 'tsai97216';
 const REPO_NAME = 'merch';
 const BRANCH = 'main';
-const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
 const WORK_INDEX_PATH = 'data/works.json';
 const VERSION_PATH = 'data/version.json';
 
-let token = sessionStorage.getItem(SESSION_KEY) || '';
+let connected = false;
+let identity = sessionStorage.getItem('chi-merch-access-email') || '';
 
-function headers() {
-  return { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
+function apiHeaders(jsonBody = false) {
+  return jsonBody ? { 'Content-Type': 'application/json' } : {};
 }
 
 async function request(path, options = {}) {
-  if (!token) throw new Error('尚未連接 GitHub。');
-  const response = await fetch(`${API_BASE}/${path}`, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    credentials: 'include',
+    headers: { ...apiHeaders(Boolean(options.body)), ...(options.headers || {}) }
+  });
   const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(body.message || `GitHub API 錯誤：${response.status}`);
+  if (!response.ok) throw new Error(body.error || body.message || `API 錯誤：${response.status}`);
   return body;
 }
 
@@ -38,21 +41,22 @@ function decodeText(value) {
 function encodeBytes(bytes) {
   let binary = '';
   const chunkSize = 0x8000;
-  for (let index = 0; index < bytes.length; index += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
-  }
+  for (let index = 0; index < bytes.length; index += chunkSize) binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
   return btoa(binary);
 }
 
+function apiPath(path) {
+  return `/github/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(BRANCH)}`;
+}
+
 export async function readFile(path) {
-  const data = await request(`contents/${path}?ref=${encodeURIComponent(BRANCH)}`);
+  const data = await request(apiPath(path));
   return { path, sha: data.sha, url: data.html_url, data: JSON.parse(decodeText(data.content)) };
 }
 
 async function writeFile(path, file, message) {
-  const response = await request(`contents/${path}`, {
+  const response = await request(`/github/contents/${path.split('/').map(encodeURIComponent).join('/')}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, content: encodeText(JSON.stringify(file.data, null, 2) + '\n'), sha: file.sha, branch: BRANCH })
   });
   return response.commit.sha;
@@ -90,21 +94,23 @@ async function bumpCollectionVersion(delta) {
 }
 
 export const github = {
-  get connected() { return Boolean(token); },
-  connect(nextToken) {
-    token = nextToken.trim();
-    if (!token) throw new Error('請輸入 GitHub Token。');
-    sessionStorage.setItem(SESSION_KEY, token);
-    window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: true } }));
-  },
-  disconnect() {
-    token = '';
-    sessionStorage.removeItem(SESSION_KEY);
-    window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: false } }));
-  },
+  get connected() { return connected; },
+  get user() { return identity; },
   async test() {
-    const data = await request(`contents/${WORK_INDEX_PATH}?ref=${encodeURIComponent(BRANCH)}`);
-    return Boolean(data.sha);
+    const result = await request('/auth/status');
+    if (!result.authenticated) throw new Error('尚未完成 Cloudflare Access 認證。');
+    connected = true;
+    identity = result.email || '';
+    if (identity) sessionStorage.setItem('chi-merch-access-email', identity);
+    window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: true, email: identity } }));
+    return { user: identity, repository: `${REPO_OWNER}/${REPO_NAME}` };
+  },
+  connect() { return this.test(); },
+  disconnect() {
+    connected = false;
+    identity = '';
+    sessionStorage.removeItem('chi-merch-access-email');
+    window.dispatchEvent(new CustomEvent('chi-merch:github', { detail: { connected: false } }));
   },
   async readAllWorks() {
     const index = await readFile(WORK_INDEX_PATH);
@@ -136,11 +142,8 @@ export const github = {
     oldFile.data = { ...oldFile.data, items: oldItems, updatedAt: new Date().toISOString() };
     newFile.data = { ...newFile.data, items: newItems, updatedAt: new Date().toISOString() };
     const results = [await writeFile(oldFile.path, oldFile, `refactor: move ${after.title}`)];
-    try {
-      results.push(await writeFile(newFile.path, newFile, `refactor: move ${after.title}`));
-    } catch (error) {
-      throw new Error(`原作品已更新，但新作品寫入失敗：${error.message}`);
-    }
+    try { results.push(await writeFile(newFile.path, newFile, `refactor: move ${after.title}`)); }
+    catch (error) { throw new Error(`原作品已更新，但新作品寫入失敗：${error.message}`); }
     return { results };
   },
   async syncDelete(item) {
@@ -155,18 +158,20 @@ export const github = {
   async uploadImage({ path, file, message }) {
     if (!(file instanceof File)) throw new Error('無效的圖片檔案。');
     const bytes = new Uint8Array(await file.arrayBuffer());
-    const response = await request(`contents/${path}`, {
+    const response = await request(`/github/contents/${path.split('/').map(encodeURIComponent).join('/')}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, content: encodeBytes(bytes), branch: BRANCH })
     });
     return { path, sha: response.content?.sha || '', url: response.content?.download_url || `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${path}`, commit: response.commit?.sha || '' };
   },
   async deleteFile(path, sha, message) {
-    const response = await request(`contents/${path}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sha, branch: BRANCH }) });
+    const response = await request(`/github/contents/${path.split('/').map(encodeURIComponent).join('/')}`, {
+      method: 'DELETE',
+      body: JSON.stringify({ message, sha, branch: BRANCH })
+    });
     return response.commit.sha;
   },
   async bumpImageVersion(delta = 1) { return bumpCollectionVersion(delta); }
 };
 
-export { REPO_OWNER, REPO_NAME, BRANCH };
+export { REPO_OWNER, REPO_NAME, BRANCH, API_BASE };
