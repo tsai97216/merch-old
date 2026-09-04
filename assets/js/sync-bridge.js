@@ -1,4 +1,4 @@
-import { github } from './github.js?v=2.10.3';
+import { github } from './github.js?v=2.11.3';
 
 const value = (form, name) => form.elements[name]?.value?.trim() || '';
 const setStatus = (management, text, kind = '') => {
