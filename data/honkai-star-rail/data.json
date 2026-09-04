@@ -2,6 +2,41 @@
   "schemaVersion": 1,
   "work": "honkai-star-rail",
   "name": "崩壞：星穹鐵道",
-  "updatedAt": "",
-  "items": []
+  "updatedAt": "2026-09-04",
+  "items": [
+    {
+      "id": "hsr-firefly-17-scale",
+      "title": "流螢 1/7 比例模型",
+      "characters": ["流螢"],
+      "category": "模型",
+      "manufacturer": "示範製造商",
+      "description": "流螢 1/7 比例收藏模型。",
+      "status": "received",
+      "images": [],
+      "purchase": { "price": 3200, "currency": "TWD", "platform": "官方商城", "date": "2026-06-12", "url": "", "orderId": "" },
+      "release": { "date": "2026-08", "expectedDate": "", "receivedDate": "2026-08-24" },
+      "shipping": { "status": "delivered", "method": "宅配", "trackingNumber": "", "note": "" },
+      "afterSales": { "status": "無", "note": "", "updatedAt": "" },
+      "notes": "示範資料，之後替換為正式收藏資料。",
+      "createdAt": "2026-06-12",
+      "updatedAt": "2026-08-24"
+    },
+    {
+      "id": "hsr-silver-wolf-goods",
+      "title": "銀狼系列周邊",
+      "characters": ["銀狼"],
+      "category": "其他",
+      "manufacturer": "示範製造商",
+      "description": "銀狼系列周邊收藏。",
+      "status": "organizing",
+      "images": [],
+      "purchase": { "price": 980, "currency": "TWD", "platform": "淘寶", "date": "2026-07-03", "url": "", "orderId": "" },
+      "release": { "date": "2026-09", "expectedDate": "", "receivedDate": "" },
+      "shipping": { "status": "pending", "method": "集運", "trackingNumber": "", "note": "" },
+      "afterSales": { "status": "無", "note": "", "updatedAt": "" },
+      "notes": "待補充商品規格與圖片。",
+      "createdAt": "2026-07-03",
+      "updatedAt": "2026-07-03"
+    }
+  ]
 }
