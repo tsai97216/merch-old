@@ -14,6 +14,7 @@ function json(data, status = 200, extraHeaders = {}) {
       'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Expose-Headers': 'x-github-request-id, x-ratelimit-limit, x-ratelimit-remaining, x-ratelimit-reset, x-ratelimit-resource, x-accepted-github-permissions, retry-after',
       'Vary': 'Origin',
       ...extraHeaders
     }
@@ -44,8 +45,8 @@ function githubHeaders(env, jsonBody = false) {
   return {
     Accept: 'application/vnd.github+json',
     Authorization: `Bearer ${env.GITHUB_TOKEN}`,
-    'X-GitHub-Api-Version': '2022-11-28',
-    'User-Agent': 'tsai97216-merch/2.12.3',
+    'X-GitHub-Api-Version': '2026-03-10',
+    'User-Agent': 'tsai97216',
     ...(jsonBody ? { 'Content-Type': 'application/json' } : {})
   };
 }
@@ -79,6 +80,7 @@ async function githubRequest(request, env, path) {
   const text = await response.text();
   let body = {};
   try { body = text ? JSON.parse(text) : {}; } catch { body = { message: text }; }
+  if (!response.ok) body = { ...body, _github: { status: response.status, headers: githubResponseHeaders(response) } };
   return json(body, response.status, githubResponseHeaders(response));
 }
 
@@ -92,6 +94,7 @@ export default {
           'Access-Control-Allow-Credentials': 'true',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
+          'Access-Control-Expose-Headers': 'x-github-request-id, x-ratelimit-limit, x-ratelimit-remaining, x-ratelimit-reset, x-ratelimit-resource, x-accepted-github-permissions, retry-after',
           'Vary': 'Origin'
         }
       });
