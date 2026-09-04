@@ -117,6 +117,9 @@ export const github = {
     const works = await Promise.all(index.data.works.map(async (work) => ({ ...work, file: await readFile(work.data) })));
     return { index, works };
   },
+  async readWorkFile(workId) {
+    return readWorkFile(workId);
+  },
   async syncAdd(item) {
     const file = await readWorkFile(item.workId);
     file.data.items = [...(file.data.items || []), cleanItem(item)];
