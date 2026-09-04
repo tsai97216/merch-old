@@ -5,7 +5,7 @@ const GITHUB_API = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
 const ALLOWED_PREFIXES = ['data/', 'assets/'];
 const ALLOWED_ORIGIN = 'https://merch.chi.qzz.io';
 
-function json(data, status = 200) {
+function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
@@ -14,7 +14,8 @@ function json(data, status = 200) {
       'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Vary': 'Origin'
+      'Vary': 'Origin',
+      ...extraHeaders
     }
   });
 }
@@ -44,9 +45,26 @@ function githubHeaders(env, jsonBody = false) {
     Accept: 'application/vnd.github+json',
     Authorization: `Bearer ${env.GITHUB_TOKEN}`,
     'X-GitHub-Api-Version': '2022-11-28',
-    'User-Agent': 'tsai97216-merch',
+    'User-Agent': 'tsai97216-merch/2.12.3',
     ...(jsonBody ? { 'Content-Type': 'application/json' } : {})
   };
+}
+
+function githubResponseHeaders(response) {
+  const headers = {};
+  for (const name of [
+    'x-github-request-id',
+    'x-ratelimit-limit',
+    'x-ratelimit-remaining',
+    'x-ratelimit-reset',
+    'x-ratelimit-resource',
+    'x-accepted-github-permissions',
+    'retry-after'
+  ]) {
+    const value = response.headers.get(name);
+    if (value) headers[name] = value;
+  }
+  return headers;
 }
 
 async function githubRequest(request, env, path) {
@@ -61,7 +79,7 @@ async function githubRequest(request, env, path) {
   const text = await response.text();
   let body = {};
   try { body = text ? JSON.parse(text) : {}; } catch { body = { message: text }; }
-  return json(body, response.status);
+  return json(body, response.status, githubResponseHeaders(response));
 }
 
 export default {
